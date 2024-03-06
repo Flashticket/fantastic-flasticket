@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql';
 import * as phpUnserialize from 'php-unserialize';
 import * as phpSerialize from 'php-serialize';
-import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME, ENVIRONMENT } from '$env/static/private'
+import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME, VERCEL_ENV } from '$env/static/private'
 import { eventData } from './constants';
 export interface Ticket {
     eventId: number;
@@ -95,7 +95,7 @@ export const createPurchase = async (seats: string[]) => {
      * Get the booking id from ova_mb_event_booking_id (for prod 18501)
      * Venue for prod is Teatro Metropolitano
      */
-    const environment = ENVIRONMENT || 'local';
+    const environment = VERCEL_ENV || 'local';
     const config = (eventData as any)[environment];
     const { seatListMetaId } = config;
     const seatListMeta = (await runQuery(`SELECT meta_value FROM boletera_dev_mt_com.wp_sya2cn_postmeta WHERE meta_id = ${seatListMetaId}`)) as any;
