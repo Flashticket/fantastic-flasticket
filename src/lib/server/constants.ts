@@ -17,7 +17,7 @@ export const eventData = {
             venue: 'Teatro Metropolitano',
         }
     },
-    development: {
+    preview: {
         seatListMetaId: 127892,
         ticket: {
             eventId: 15090,
