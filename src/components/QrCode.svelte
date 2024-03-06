@@ -7,7 +7,7 @@
   
     onMount(async () => {
       await QRCode.toCanvas(canvas, text, {
-        width: 200,
+        width: 100,
         margin: 2,
         color: {
           dark: '#000000',
