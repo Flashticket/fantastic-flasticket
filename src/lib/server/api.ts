@@ -75,7 +75,7 @@ export const createTicket = async (ticket: Ticket) => {
         `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_private_desc_ticket', '')`,
         `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_status', '')`,
         `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_checkin_time', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id_event', '${ticket.seat}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id_event', '${ticket.eventId}')`,
         `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id', '${ticket.ticketId}')`,
     ];
     const results = await Promise.all(insertQueries.map(runQuery));
