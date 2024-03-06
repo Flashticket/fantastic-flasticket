@@ -1,5 +1,6 @@
 export const eventData = {
     production: {
+        // 127892	18501	ova_mb_event_list_seat_book	a:1:{i:1706143422;a:1:{i:0;s:16:"SECC-A4-ASTO-C14";}}
         seatListMetaId: 127892,
         ticket: {
             eventId: 15090,

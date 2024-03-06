@@ -53,30 +53,30 @@ export const runQuery = async (query: string) => {
 export const createTicket = async (ticket: Ticket) => {
     
     const insertQueries = [
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_event_id', ${ticket.eventId})`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_booking_id', ${ticket.bookingId})`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_name_event', '${ticket.eventName}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_qr_code', '${ticket.qrCode}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_name_customer', '${ticket.customer.name}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_phone_customer', '${ticket.customer.phone}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_email_customer', '${ticket.customer.email}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_address_customer', '${ticket.customer.address}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_venue', 'a:1:{i:0;s:${ticket.venue.length}:"${ticket.venue}";}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_address', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_data_checkout_field', '[]')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_seat', '${ticket.seat}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_date_start', '${ticket.eventStart}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_date_end', '${ticket.eventEnd}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_img', '${ticket.img}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_ticket', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_label_ticket', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_content_ticket', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_desc_ticket', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_private_desc_ticket', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_status', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_checkin_time', '')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id_event', '${ticket.seat}')`,
-        `INSERT INTO boletera_dev_mt_com.wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id', '${ticket.ticketId}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_event_id', ${ticket.eventId})`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_booking_id', ${ticket.bookingId})`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_name_event', '${ticket.eventName}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_qr_code', '${ticket.qrCode}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_name_customer', '${ticket.customer.name}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_phone_customer', '${ticket.customer.phone}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_email_customer', '${ticket.customer.email}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_address_customer', '${ticket.customer.address}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_venue', 'a:1:{i:0;s:${ticket.venue.length}:"${ticket.venue}";}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_address', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_data_checkout_field', '[]')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_seat', '${ticket.seat}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_date_start', '${ticket.eventStart}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_date_end', '${ticket.eventEnd}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_img', '${ticket.img}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_ticket', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_label_ticket', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_content_ticket', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_desc_ticket', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_private_desc_ticket', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_status', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_checkin_time', '')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id_event', '${ticket.seat}')`,
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id', '${ticket.ticketId}')`,
     ];
     const results = await Promise.all(insertQueries.map(runQuery));
     return results;
@@ -98,9 +98,10 @@ export const createPurchase = async (seats: string[]) => {
     const environment = VERCEL_ENV || 'local';
     const config = (eventData as any)[environment];
     const { seatListMetaId } = config;
-    const seatListMeta = (await runQuery(`SELECT meta_value FROM boletera_dev_mt_com.wp_sya2cn_postmeta WHERE meta_id = ${seatListMetaId}`)) as any;
+    const seatListMeta = (await runQuery(`SELECT meta_value FROM wp_sya2cn_postmeta WHERE meta_id = ${seatListMetaId}`)) as any;
     const metaValue = seatListMeta[0].meta_value;
     console.log('seatListMeta:', metaValue);
+    // return;
     const seatList = phpUnserialize.unserialize(metaValue);
     console.log('parsedData:', seatList);
     let n = Object.keys(seatList).length;
@@ -108,7 +109,7 @@ export const createPurchase = async (seats: string[]) => {
     for (const seat of seats) {
         seatList[n] = seat;
         n++;
-        const postQuery = `INSERT INTO boletera_dev_mt_com.wp_sya2cn_posts
+        const postQuery = `INSERT INTO wp_sya2cn_posts
         (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
         VALUES(1, CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 'Mapa', '', 'publish', 'closed', 'closed', '', 'mapa-270', '', '', CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 0, 'https://boletera.dev-mt.com/el_tickets/mapa-270/', 0, 'el_tickets', '', 0);
         `;
@@ -123,7 +124,7 @@ export const createPurchase = async (seats: string[]) => {
     console.log(seatList);
     const serialized = phpSerialize.serialize(seatList);
     console.log('serialized:', serialized);
-    await runQuery(`UPDATE boletera_dev_mt_com.wp_sya2cn_postmeta set meta_value = '${serialized}' WHERE meta_id = ${seatListMetaId}`);
+    await runQuery(`UPDATE wp_sya2cn_postmeta set meta_value = '${serialized}' WHERE meta_id = ${seatListMetaId}`);
     return tickets;
    
 }
