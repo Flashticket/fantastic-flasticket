@@ -17,6 +17,24 @@ export const eventData = {
             venue: 'Teatro Metropolitano',
         }
     },
+    development: {
+        seatListMetaId: 127892,
+        ticket: {
+            eventId: 15090,
+            bookingId: 18501,
+            img: 16367,
+            eventStart: 1710016200,
+            eventEnd: 1710027900,
+            eventName: 'Kurt en Concierto',
+            customer: {
+                name: 'Internal',
+                phone: '1234',
+                email: 'abcd@foo.com',
+                address: 'Internal address',
+            },
+            venue: 'Teatro Metropolitano',
+        }
+    },
     local: {
         seatListMetaId: 98976,
         ticket: {
