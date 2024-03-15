@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql';
-import * as phpUnserialize from 'php-unserialize';
-import * as phpSerialize from 'php-serialize';
+
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME, VERCEL_ENV } from '$env/static/private'
 import { eventData } from './constants';
 export interface Ticket {
@@ -24,6 +23,7 @@ export interface Ticket {
 }
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
+    console.log('running query:', query)
     const connData = {
         host: DB_HOST,
         user: DB_USER,
@@ -42,90 +42,213 @@ export const runQuery = async (query: string) => {
             if (error) {
                 reject(error);
             }
-            resolve(results);
+            resolve(results as any);
         });
     });
     // close the connection
     connection.end();
     console.log(results);
-    return results;
+    return results as any;
 };
-export const createTicket = async (ticket: Ticket) => {
-    
-    const insertQueries = [
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_event_id', ${ticket.eventId})`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_booking_id', ${ticket.bookingId})`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_name_event', '${ticket.eventName}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_qr_code', '${ticket.qrCode}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_name_customer', '${ticket.customer.name}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_phone_customer', '${ticket.customer.phone}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_email_customer', '${ticket.customer.email}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_address_customer', '${ticket.customer.address}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_venue', 'a:1:{i:0;s:${ticket.venue.length}:"${ticket.venue}";}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_address', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_data_checkout_field', '[]')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_seat', '${ticket.seat}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_date_start', '${ticket.eventStart}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_date_end', '${ticket.eventEnd}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_img', '${ticket.img}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_ticket', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_label_ticket', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_color_content_ticket', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_desc_ticket', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_private_desc_ticket', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_status', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_checkin_time', '')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id_event', '${ticket.eventId}')`,
-        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_ticket_id', '${ticket.ticketId}')`,
-    ];
-    const results = await Promise.all(insertQueries.map(runQuery));
-    return results;
-}
-export const createPurchase = async (seats: string[]) => {
-    // 98976	16388	ova_mb_event_list_seat_book	a:2:{i:0;s:26:"AZUL-VIP-SECC-C3-ASTO-AA23";i:1;s:25:"DIAMANTE-SECC-A3-ASTO-K21";}
 
-    /**
-     * Get post of type el_bookings (for prod 18501)
-     * Get event start from ova_mb_event_date_start (for prod 1710016200)
-     * Get event end from ova_mb_event_date_end (for prod 1710027900)
-     * Get event name from ova_mb_event_name_event (for prod Kurt en Concierto)
-     * Get img id from ova_mb_event_img (for prod 16367)
-     * From its meta get the seat list from ova_mb_event_list_seat_book. Get the meta_id (for prod 127892)
-     * From its meta get the event id from ova_mb_event_event_id (for prod 15090)
-     * Get the booking id from ova_mb_event_booking_id (for prod 18501)
-     * Venue for prod is Teatro Metropolitano
-     */
-    const environment = VERCEL_ENV || 'local';
-    const config = (eventData as any)[environment];
-    const { seatListMetaId } = config;
-    const seatListMeta = (await runQuery(`SELECT meta_value FROM wp_sya2cn_postmeta WHERE meta_id = ${seatListMetaId}`)) as any;
-    const metaValue = seatListMeta[0].meta_value;
-    console.log('seatListMeta:', metaValue);
+export const getPost = async (postId: number) => {
+    const post = await runQuery(`SELECT * FROM wp_sya2cn_posts WHERE ID = ${postId}`);
+    return post[0];
+}
+
+export const getPostMeta = async (postId: number, metaKey: string) => {
+    const meta = await runQuery(`SELECT * FROM wp_sya2cn_postmeta WHERE post_id = ${postId} AND meta_key = '${metaKey}'`);
+    return meta.length > 0 ? meta[0] : null;
+}
+
+export const bookSeats = async (eventId: number, idCal: string, seats: { seat: string, amount: number, type: 'area' | 'map' }[]) => {
+    console.log('seats:', seats);
+    // const seatBook = 'a:3:{i:0;s:23:"VERDE-SECC-GEN-DER-ASTO";i:1;s:30:"PLATINUM_ROJO-SECC-B1-ASTO-X44";i:2;s:30:"ORO_AMARILLO-SECC-C1-ASTO-FF45";}';
+    const seatBook = `a:${seats.length}:{${seats.map((s, i) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
+    // const seatQuantity = 'a:3:{s:23:"VERDE-SECC-GEN-DER-ASTO";i:4;s:30:"PLATINUM_ROJO-SECC-B1-ASTO-X44";i:1;s:30:"ORO_AMARILLO-SECC-C1-ASTO-FF45";i:1;}';
+    const seatQuantity = `a:${seats.length}:{${seats.map((s, i) => `s:${s.seat.length}:"${s.seat}";i:${s.amount}`).join(';')};}`;
+    // const listIdTicket = ["VERDE-SECC-GEN-DER-ASTO","PLATINUM_ROJO-SECC-B1-ASTO-X44","ORO_AMARILLO-SECC-C1-ASTO-FF45"];
+    const listIdTicket = `a:${seats.length}:{${seats.map((s, i) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
+    console.log('seatBook:', seatBook);
+    console.log('seatQuantity:', seatQuantity);
+    console.log('listIdTicket:', listIdTicket);
+    console.log('eventId:', eventId);
     // return;
-    const seatList = phpUnserialize.unserialize(metaValue);
-    console.log('parsedData:', seatList);
-    let n = Object.keys(seatList).length;
+    const event = await getPost(eventId);
+    const eventStart = await getPostMeta(eventId, 'ova_mb_event_start_date_str');
+    const eventEnd = await getPostMeta(eventId, 'ova_mb_event_end_date_str');
+    const img = 15067 // where to get this from?
+    const customer = {
+        name: 'Taquilla',
+        phone: '123',
+        email: 'Taquilla',
+        address: '',
+    };
+    const venue = 'Teatro Metropolitano';
+    
+
+    const eventName = event.post_title;
+    const postPassword = Math.round(Math.random() * 10000); // not sure about this one...
+    
+
+    const query = `INSERT INTO wp_sya2cn_posts (post_author,post_date,post_date_gmt,post_content,post_title,post_excerpt,post_status,comment_status,ping_status,post_password,post_name,to_ping,pinged,post_modified,post_modified_gmt,post_content_filtered,post_parent,guid,menu_order,post_type,post_mime_type,comment_count) VALUES
+	 (1,CURRENT_TIMESTAMP(), UTC_TIMESTAMP(),'','${eventId} - ${eventName}','','publish','closed','closed','','${postPassword}','','',CURRENT_TIMESTAMP(), UTC_TIMESTAMP(),'',0,'https://boletera.dev-mt.com/el_bookings/${postPassword}/',0,'el_bookings','',0);`
+    const booking = await runQuery(query);
+    if (!booking) throw new Error('No booking');
+    const bookingId = booking.insertId;
+
+    // a:3:{i:0;s:23:"CAFE-SECC-GEN-CENT-ASTO";i:1;s:23:"VERDE-SECC-GEN-DER-ASTO";i:2;s:22:"ROSA-SECC-GEN-IZQ-ASTO";}
+    const areaSeats = seats.filter(s => s.type === 'area').map(s => s.seat);
+    const areaSeatsStr = `a:${areaSeats.length}:{${areaSeats.map((s, i) => `i:${i};s:${s.length}:"${s}"`).join(';')};}`;
+
+
+
+    const bookingMetaQueries = 
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_status_holding_ticket', 'Completed'),
+        (${bookingId}, 'ova_mb_event_multiple_ticket', 'no'),
+        (${bookingId}, 'ova_mb_event_status', 'Completed'),
+        (${bookingId}, 'ova_mb_event_list_seat_book', '${seatBook}'),
+        (${bookingId}, 'ova_mb_event_list_qty_ticket_by_id_ticket', '${seatQuantity}'),
+        (${bookingId}, 'ova_mb_event_list_id_ticket', '${listIdTicket}'),
+        (${bookingId}, 'ova_mb_event_title_event', '${eventName}'),
+        (${bookingId}, 'ova_mb_event_id_event', '${eventId}'),
+        (${bookingId}, 'ova_mb_event_id_cal', '${idCal}'),
+        (${bookingId}, 'ova_mb_event_arr_area', '${areaSeatsStr}')
+        `;
+        
+        // (${bookingId}, 'ova_mb_event_system_fee', '110')
+        // (${bookingId}, 'ova_mb_event_orderid', '16489'),
+        // (${bookingId}, 'ova_mb_event_profit_status', ''),
+        // (${bookingId}, 'ova_mb_event_id_customer', '10'),
+        // (${bookingId}, 'ova_mb_event_tax', '100'),
+        // (${bookingId}, 'ova_mb_event_profit', '2000'),
+        // (${bookingId}, 'ova_mb_event_commission', '110'),
+        // (${bookingId}, 'ova_mb_event_total_after_tax', '2210'),
+        // (${bookingId}, 'ova_mb_event_total', '2110'),
+        // (${bookingId}, 'ova_mb_event_address', '23423'),
+        // (${bookingId}, 'ova_mb_event_email', 'martinuribe73@gmail.com'),
+        // (${bookingId}, 'ova_mb_event_phone', '5574783438'),
+        // (${bookingId}, 'ova_mb_event_last_name', 's'),
+        // (${bookingId}, 'ova_mb_event_first_name', 'Andoni'),
+        // (${bookingId}, 'ova_mb_event_name', 'Andoni s'),
+        // (${bookingId}, 'ova_mb_event_date_cal_tmp', '1717027200'),
+        // (${bookingId}, 'ova_mb_event_date_cal', '30 mayo, 2024'),
+        // (${bookingId}, 'ova_mb_event_id_cal', '1708643128')
+    const results = await runQuery(bookingMetaQueries);
     const tickets = [];
     for (const seat of seats) {
-        seatList[n] = seat;
-        n++;
-        const postQuery = `INSERT INTO wp_sya2cn_posts
-        (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
-        VALUES(1, CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 'Mapa', '', 'publish', 'closed', 'closed', '', 'mapa-270', '', '', CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 0, 'https://boletera.dev-mt.com/el_tickets/mapa-270/', 0, 'el_tickets', '', 0);
-        `;
-        const postResult = (await runQuery(postQuery)) as any;
-        const ticketId = postResult.insertId;
-        if (!ticketId) throw new Error('No ticketId');
-        const ticket = { ...config.ticket, qrCode: uuidv4().replace(/-/g, ''), seat, ticketId };
-        tickets.push(ticket);
-        await createTicket(ticket);
-        console.log(`ticket created for seat ${seat}`);
+        for (let i = 0; i < seat.amount; i++) {
+            const postQuery = `INSERT INTO wp_sya2cn_posts
+            (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
+            VALUES(1, CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 'Mapa', '', 'publish', 'closed', 'closed', '', '${postPassword}', '', '', CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 0, 'https://boletera.dev-mt.com/el_tickets/${postPassword}/', 0, 'el_tickets', '', 0);
+            `;
+            const postResult = await runQuery(postQuery);
+            const ticketId = postResult.insertId;
+            if (!ticketId) {
+                throw new Error('No ticketId');
+            }
+            const qrCode = uuidv4().replace(/-/g, '');
+            const ticket: Ticket = {
+                eventId,
+                bookingId,
+                img,
+                eventStart: eventStart.meta_value,
+                eventEnd: eventEnd.meta_value,
+                eventName,
+                qrCode,
+                customer,
+                venue,
+                seat: seat.seat,
+                ticketId,
+            }
+            tickets.push(ticket);
+            await createTicket(ticket);
+            console.log(`ticket created for seat ${seat}`);
+        }
     }
-    console.log(seatList);
-    const serialized = phpSerialize.serialize(seatList);
-    console.log('serialized:', serialized);
-    await runQuery(`UPDATE wp_sya2cn_postmeta set meta_value = '${serialized}' WHERE meta_id = ${seatListMetaId}`);
+
+    // 'a:6:{i:0;i:16502;i:1;i:16504;i:2;i:16506;i:3;i:16508;i:4;i:16510;i:5;i:16512;}';
+    const ticketIdsStr = tickets.map((r: Ticket, index) => `i: ${index};i:${r.ticketId}`).join(';');
+    const ticketListQuery = `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_record_ticket_ids', 'a:${tickets.length}:{${ticketIdsStr};}')`;
+    await runQuery(ticketListQuery);
     return tickets;
-   
+
 }
+export const createTicket = async (ticket: Ticket) => {
+    
+    const insertQueries = 
+        `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_event_id', ${ticket.eventId}),
+        (${ticket.ticketId}, 'ova_mb_event_booking_id', ${ticket.bookingId}),
+        (${ticket.ticketId}, 'ova_mb_event_name_event', '${ticket.eventName}'),
+        (${ticket.ticketId}, 'ova_mb_event_qr_code', '${ticket.qrCode}'),
+        (${ticket.ticketId}, 'ova_mb_event_name_customer', '${ticket.customer.name}'),
+        (${ticket.ticketId}, 'ova_mb_event_phone_customer', '${ticket.customer.phone}'),
+        (${ticket.ticketId}, 'ova_mb_event_email_customer', '${ticket.customer.email}'),
+        (${ticket.ticketId}, 'ova_mb_event_address_customer', '${ticket.customer.address}'),
+        (${ticket.ticketId}, 'ova_mb_event_venue', 'a:1:{i:0;s:${ticket.venue.length}:"${ticket.venue}";}'),
+        (${ticket.ticketId}, 'ova_mb_event_address', ''),
+        (${ticket.ticketId}, 'ova_mb_event_data_checkout_field', '[]'),
+        (${ticket.ticketId}, 'ova_mb_event_seat', '${ticket.seat}'),
+        (${ticket.ticketId}, 'ova_mb_event_date_start', '${ticket.eventStart}'),
+        (${ticket.ticketId}, 'ova_mb_event_date_end', '${ticket.eventEnd}'),
+        (${ticket.ticketId}, 'ova_mb_event_img', '${ticket.img}'),
+        (${ticket.ticketId}, 'ova_mb_event_color_ticket', ''),
+        (${ticket.ticketId}, 'ova_mb_event_color_label_ticket', ''),
+        (${ticket.ticketId}, 'ova_mb_event_color_content_ticket', ''),
+        (${ticket.ticketId}, 'ova_mb_event_desc_ticket', ''),
+        (${ticket.ticketId}, 'ova_mb_event_private_desc_ticket', ''),
+        (${ticket.ticketId}, 'ova_mb_event_ticket_status', ''),
+        (${ticket.ticketId}, 'ova_mb_event_checkin_time', ''),
+        (${ticket.ticketId}, 'ova_mb_event_ticket_id_event', '${ticket.eventId}'),
+        (${ticket.ticketId}, 'ova_mb_event_ticket_id', '${ticket.ticketId}')`;
+    const results = await runQuery(insertQueries);
+    return results;
+}
+// export const createPurchase = async (seats: string[]) => {
+//     // 98976	16388	ova_mb_event_list_seat_book	a:2:{i:0;s:26:"AZUL-VIP-SECC-C3-ASTO-AA23";i:1;s:25:"DIAMANTE-SECC-A3-ASTO-K21";}
+
+//     /**
+//      * Get post of type el_bookings (for prod 18501)
+//      * Get event start from ova_mb_event_date_start (for prod 1710016200)
+//      * Get event end from ova_mb_event_date_end (for prod 1710027900)
+//      * Get event name from ova_mb_event_name_event (for prod Kurt en Concierto)
+//      * Get img id from ova_mb_event_img (for prod 16367)
+//      * From its meta get the seat list from ova_mb_event_list_seat_book. Get the meta_id (for prod 127892)
+//      * From its meta get the event id from ova_mb_event_event_id (for prod 15090)
+//      * Get the booking id from ova_mb_event_booking_id (for prod 18501)
+//      * Venue for prod is Teatro Metropolitano
+//      */
+//     const environment = VERCEL_ENV || 'local';
+//     const config = (eventData as any)[environment];
+//     const { seatListMetaId } = config;
+//     const seatListMeta = await runQuery(`SELECT meta_value FROM wp_sya2cn_postmeta WHERE meta_id = ${seatListMetaId}`);
+//     const metaValue = seatListMeta[0].meta_value;
+//     console.log('seatListMeta:', metaValue);
+//     // return;
+//     const seatList = phpUnserialize.unserialize(metaValue);
+//     console.log('parsedData:', seatList);
+//     let n = Object.keys(seatList).length;
+//     const tickets = [];
+//     for (const seat of seats) {
+//         seatList[n] = seat;
+//         n++;
+//         const postQuery = `INSERT INTO wp_sya2cn_posts
+//         (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
+//         VALUES(1, CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 'Mapa', '', 'publish', 'closed', 'closed', '', 'mapa-270', '', '', CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 0, 'https://boletera.dev-mt.com/el_tickets/mapa-270/', 0, 'el_tickets', '', 0);
+//         `;
+//         const postResult = (await runQuery(postQuery)) as any;
+//         const ticketId = postResult.insertId;
+//         if (!ticketId) throw new Error('No ticketId');
+//         const ticket = { ...config.ticket, qrCode: uuidv4().replace(/-/g, ''), seat, ticketId };
+//         tickets.push(ticket);
+//         await createTicket(ticket);
+//         console.log(`ticket created for seat ${seat}`);
+//     }
+//     console.log(seatList);
+//     const serialized = phpSerialize.serialize(seatList);
+//     console.log('serialized:', serialized);
+//     await runQuery(`UPDATE wp_sya2cn_postmeta set meta_value = '${serialized}' WHERE meta_id = ${seatListMetaId}`);
+//     return tickets;
+   
+// }
 
