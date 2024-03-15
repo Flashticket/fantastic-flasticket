@@ -1,4 +1,4 @@
-import { createPurchase } from "$lib/server/api";
+import { bookSeats } from "$lib/server/api";
 import type { RequestEvent } from "@sveltejs/kit"
 const parseJson = async (buffer: ArrayBuffer) => {
     const data = Buffer.from(buffer).toString('utf8');
@@ -17,8 +17,8 @@ const parsedData = (requestEvent: any) => {
 export const POST = async ({ request, params, url }: { request: RequestEvent, params: any, url: URL}) => {
     const body = await parsedData(request);
     console.log('body:', body);
-    const { seats } = body;
-    const results = await createPurchase(seats);
+    const { seats, eventId, idCal } = body;
+    const results = await bookSeats(eventId, idCal, seats);
     return new Response(JSON.stringify(results), {
         headers: {
             'content-type': 'application/json'

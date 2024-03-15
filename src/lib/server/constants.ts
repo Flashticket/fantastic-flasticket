@@ -37,21 +37,21 @@ export const eventData = {
         }
     },
     local: {
-        seatListMetaId: 98976,
+        seatListMetaId: 100347,
         ticket: {
-            eventId: 15701,
-            bookingId: 16388,
-            img: 14999,
-            eventStart: 1722456000,
-            eventEnd: 1722469500,
-            eventName: 'EVENTO PRUEBA DEL NUEVO NOMBRE',
+            eventId: 15069,
+            bookingId: 16433,
+            img: 14999,//??
+            eventStart: 1712694600,
+            eventEnd: 1712706300,
+            eventName: 'Kurt en concierto',
             customer: {
                 name: 'Internal',
                 phone: '1234',
                 email: 'abcd@foo.com',
                 address: 'Internal address',
             },
-            venue: 'Palacio Blanco',
+            venue: 'Teatro Metropolitano',
         }
     }
 }
