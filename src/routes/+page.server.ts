@@ -52,6 +52,23 @@ export const load = async (request) => {
             // price: parseInt(price),
         });
     });
+    $('.wp-seat-info').map((i, el) => {
+        console.log('wp-seat-info', i);
+        const span = $(el).find('span');
+        console.log('span', span);
+        span.map((i, el) => {
+            const id = $(el).text();
+            console.log('seat', id);
+            // console.log('price', price);
+            seats.push({
+                seat: id,
+                amount: 1,
+                type: 'map',
+                // price: parseInt(price),
+            });
+        });
+    });
+
     // wait a bit
     await new Promise(resolve => setTimeout(resolve, 1000));
     console.log('seats', seats);
