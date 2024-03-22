@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql';
 
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
-import type { Ticket } from '$lib/types';
+import type { SeatType, Ticket, TicketMapType } from '$lib/types';
 
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
@@ -43,11 +43,32 @@ export const getPostMeta = async (postId: number, metaKey: string) => {
     const meta = await runQuery(`SELECT * FROM wp_sya2cn_postmeta WHERE post_id = ${postId} AND meta_key = '${metaKey}'`);
     return meta.length > 0 ? meta[0] : null;
 }
+// group array of objects by a property of the objects
+export const groupBy = (array: any[], key: string) => {
+    return array.reduce((acc, cur) => {
+        (acc[cur[key]] = acc[cur[key]] || []).push(cur);
+        return acc;
+    }, {});
+}
+// get unique values from an array
+export const unique = (array: any[]) => {
+    return [...new Set(array)];
+}
 
-export const bookSeats = async (eventId: number, idCal: string, seats: { seat: string, amount: number, type: 'area' | 'map' }[]) => {
+export const getSeatBook = (seats: SeatType[]) => {
+    if (!seats.some(s => s.type === 'dropdown')) {
+        return `a:${seats.length}:{${seats.map((s, i) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
+    }
+    const groupedSeats = groupBy(seats, 'ticketId');
+    return `a:${Object.keys(groupedSeats).length}:{${Object.keys(groupedSeats).map((ticketId, i) => {
+        return `i:${ticketId};a:${groupedSeats[ticketId].length}:{${groupedSeats[ticketId].map((s: SeatType, i: number) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')}}`;
+    })}}`;
+}
+export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[]) => {
     console.log('seats:', seats);
     // const seatBook = 'a:3:{i:0;s:23:"VERDE-SECC-GEN-DER-ASTO";i:1;s:30:"PLATINUM_ROJO-SECC-B1-ASTO-X44";i:2;s:30:"ORO_AMARILLO-SECC-C1-ASTO-FF45";}';
-    const seatBook = `a:${seats.length}:{${seats.map((s, i) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
+    const seatBook = getSeatBook(seats);
+    console.log('seatBook:', seatBook);
     // const seatQuantity = 'a:3:{s:23:"VERDE-SECC-GEN-DER-ASTO";i:4;s:30:"PLATINUM_ROJO-SECC-B1-ASTO-X44";i:1;s:30:"ORO_AMARILLO-SECC-C1-ASTO-FF45";i:1;}';
     const seatQuantity = `a:${seats.length}:{${seats.map((s, i) => `s:${s.seat.length}:"${s.seat}";i:${s.amount}`).join(';')};}`;
     // const listIdTicket = ["VERDE-SECC-GEN-DER-ASTO","PLATINUM_ROJO-SECC-B1-ASTO-X44","ORO_AMARILLO-SECC-C1-ASTO-FF45"];

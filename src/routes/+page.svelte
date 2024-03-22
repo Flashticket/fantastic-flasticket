@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Ticket } from "$lib/types";
+    import type { SeatType, Ticket, TicketMapType } from "$lib/types";
   import QrCode from "../components/QrCode.svelte";
   import moment from "moment";
   export let data;
@@ -63,7 +63,7 @@
   const createTickets = async () => {
     busy = true;
     try {
-      const seats = data.seats as { seat: string, amount: number, type: 'area' | 'map' }[];
+      const seats = data.seats as SeatType[];
       const eventId = data.eventId;
       const idCal = data.idCal;
       const res = await fetch("/api/ticket", {
