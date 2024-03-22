@@ -2,8 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql';
 
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
-import { eventData } from './constants';
-        name: string;
 import type { Ticket } from '$lib/types';
 
 // typescript mysql client to run raw queries
