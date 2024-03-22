@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { Ticket } from "$lib/types";
   import QrCode from "../components/QrCode.svelte";
   import moment from "moment";
   export let data;
@@ -55,7 +56,8 @@
 //       ticketId: 16413,
 //     },
 //   ];
-  let tickets = [];
+  let tickets: Ticket[] = [];
+  let bookingId = 0;
   console.log(data);
   let busy = false;
   const createTickets = async () => {
@@ -71,7 +73,9 @@
         },
         body: JSON.stringify({ seats, eventId, idCal }),
       });
-      tickets = await res.json();
+      const resData = await res.json();
+      tickets = resData.tickets;
+      bookingId = resData.bookingId;
       console.log(tickets);
     } catch (error) {
       console.log(error);

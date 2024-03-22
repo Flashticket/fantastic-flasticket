@@ -3,24 +3,9 @@ import mysql from 'mysql';
 
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
 import { eventData } from './constants';
-export interface Ticket {
-    eventId: number;
-    bookingId: number;
-    img: number,
-    eventStart: number;
-    eventEnd: number;
-    eventName: string;
-    qrCode: string;
-    customer: {
         name: string;
-        phone: string;
-        email: string;
-        address: string;
-    };
-    venue: string;
-    seat: string;
-    ticketId: number;
-}
+import type { Ticket } from '$lib/types';
+
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
     console.log('running query:', query)
@@ -171,7 +156,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: { seat: s
     const ticketIdsStr = tickets.map((r: Ticket, index) => `i: ${index};i:${r.ticketId}`).join(';');
     const ticketListQuery = `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_record_ticket_ids', 'a:${tickets.length}:{${ticketIdsStr};}')`;
     await runQuery(ticketListQuery);
-    return tickets;
+    return { bookingId, tickets };
 
 }
 export const createTicket = async (ticket: Ticket) => {

@@ -440,7 +440,8 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
 			// delete local storage item named 15857_1708643128 and manually refresh the page after printing tickets
 			localStorage.removeItem(eventId+'_'+idCal);
 			// window.open('https://boletera.vercel.app/?eventId='+eventId+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
-			window.open('http://localhost:5173/?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
+			// window.open('http://localhost:5173/?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
+            window.open('https://boletera-git-development-aarostegui-s-team.vercel.app/?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
 		}
 	</script>
 <?php endif; ?>
