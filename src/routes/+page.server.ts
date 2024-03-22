@@ -63,7 +63,7 @@ export const load = async (request) => {
             seats.push({
                 seat: id,
                 amount: 1,
-                type: 'map',
+                type: 'area',
                 // price: parseInt(price),
             });
         });
