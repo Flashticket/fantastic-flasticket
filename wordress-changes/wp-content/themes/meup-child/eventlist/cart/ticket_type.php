@@ -414,6 +414,7 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
 <?php endif; //if message ?>
 <?php if( current_user_can( 'administrator' ) ){
 	echo '<button id="buyAll" class="btn btn-primary" onclick="buyAll()"><i>Comprar todos los asientos</i></button>';
+    echo '<button id="refreshPage" style="display: none" class="btn btn-primary" onclick="refreshPage()"><i>Refrescar</i></button>';
 } ?>
 
 
@@ -441,8 +442,17 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
 			localStorage.removeItem(eventId+'_'+idCal);
 			// window.open('https://boletera.vercel.app/?eventId='+eventId+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
 			// window.open('http://localhost:5173/?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
+            var el = window.document.getElementsByClassName('imp-ui-wrap');
+            document.getElementById('buyAll').style.display = 'none';
+            document.getElementById('refreshPage').style.display = '';
+            if (el && el.length > 0) {
+                el[0].style.display = 'none';
+            }
             window.open('https://boletera-git-development-aarostegui-s-team.vercel.app/?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
 		}
+        function refreshPage() {
+            window.document.location.reload();
+        }
 	</script>
 <?php endif; ?>
 
