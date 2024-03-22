@@ -61,7 +61,7 @@ export const getSeatBook = (seats: SeatType[]) => {
     }
     const groupedSeats = groupBy(seats, 'ticketId');
     return `a:${Object.keys(groupedSeats).length}:{${Object.keys(groupedSeats).map((ticketId, i) => {
-        return `i:${ticketId};a:${groupedSeats[ticketId].length}:{${groupedSeats[ticketId].map((s: SeatType, i: number) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')}}`;
+        return `i:${ticketId};a:${groupedSeats[ticketId].length}:{${groupedSeats[ticketId].map((s: SeatType, i: number) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
     })}}`;
 }
 export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[]) => {
