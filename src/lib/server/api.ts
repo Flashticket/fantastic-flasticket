@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql';
 
-import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME, VERCEL_ENV } from '$env/static/private'
+import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
 import { eventData } from './constants';
 export interface Ticket {
     eventId: number;
