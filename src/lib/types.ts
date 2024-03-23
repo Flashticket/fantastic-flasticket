@@ -15,6 +15,17 @@ export interface Ticket {
         address: string;
     };
     venue: string;
+    address: string;
     seat: string;
     ticketId: number;
+}
+export interface Event {
+    id: number;
+    name: string;
+    date: string;
+    venue: string;
+    img: string;
+    url: string;
+    description: string;
+    tickets: Ticket[];
 }

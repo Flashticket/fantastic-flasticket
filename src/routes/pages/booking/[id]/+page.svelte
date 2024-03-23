@@ -1,103 +1,13 @@
 <script lang="ts">
     import type { SeatType, Ticket, TicketMapType } from "$lib/types";
-  import QrCode from "../components/QrCode.svelte";
+  import QrCode from "../../../../components/QrCode.svelte";
   import moment from "moment";
   export let data;
-//   let tickets = [
-//     {
-//       eventId: 15701,
-//       img: 14999,
-//       eventStart: 1722456000,
-//       eventEnd: 1722469500,
-//       eventName: "EVENTO PRUEBA DEL NUEVO NOMBRE",
-//       qrCode: "8c94da999fbd445baa215f8ea650c89f",
-//       customer: {
-//         name: "Internal",
-//         phone: "1234",
-//         email: "abcd@foo.com",
-//         address: "Internal address",
-//       },
-//       venue: "Palacio Blanco",
-//       seat: "AZUL-VIP-SECC-C3-ASTO-JJ18",
-//       ticketId: 16411,
-//     },
-//     {
-//       eventId: 15701,
-//       img: 14999,
-//       eventStart: 1722456000,
-//       eventEnd: 1722469500,
-//       eventName: "EVENTO PRUEBA DEL NUEVO NOMBRE",
-//       qrCode: "5586a87843304ff890cfefb6c86c6609",
-//       customer: {
-//         name: "Internal",
-//         phone: "1234",
-//         email: "abcd@foo.com",
-//         address: "Internal address",
-//       },
-//       venue: "Palacio Blanco",
-//       seat: "DIAMANTE-SECC-A3-ASTO-N15",
-//       ticketId: 16412,
-//     },
-//     {
-//       eventId: 15701,
-//       img: 14999,
-//       eventStart: 1722456000,
-//       eventEnd: 1722469500,
-//       eventName: "EVENTO PRUEBA DEL NUEVO NOMBRE",
-//       qrCode: "1218567199ef49978da3abe8aa0b9383",
-//       customer: {
-//         name: "Internal",
-//         phone: "1234",
-//         email: "abcd@foo.com",
-//         address: "Internal address",
-//       },
-//       venue: "Palacio Blanco",
-//       seat: "PLATINUM-SECC-B3-ASTO-U13",
-//       ticketId: 16413,
-//     },
-//   ];
-  let tickets: Ticket[] = [];
-  let bookingId = 0;
+  const { tickets, bookingId, event } = data;
   console.log(data);
-  let busy = false;
-  const createTickets = async () => {
-    busy = true;
-    try {
-      const seats = data.seats as SeatType[];
-      const eventId = data.eventId;
-      const idCal = data.idCal;
-      const res = await fetch("/api/ticket", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ seats, eventId, idCal }),
-      });
-      const resData = await res.json();
-      if (!resData.bookingId) {
-        alert("Error creating tickets");
-      }
-      document.location.href = `/pages/booking/${resData.bookingId}`;
-      // tickets = resData.tickets;
-      // bookingId = resData.bookingId;
-      // console.log(tickets);
-    } catch (error) {
-      console.log(error);
-    }
-    busy = false;
-  };
+
 </script>
 
-<div class="forScreen">
-  {#if busy}
-    <p>Creating tickets...</p>
-  {:else}
-  <div class="container m-20">
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      on:click={createTickets}>Crear tickets</button>
-  </div>
-  {/if}
-</div>
 {#each tickets as ticket, i}
   <div class="wrapper avoidInnerBreak">
     <div class="col1">

@@ -43,6 +43,9 @@ export const getPostMeta = async (postId: number, metaKey: string) => {
     const meta = await runQuery(`SELECT * FROM wp_sya2cn_postmeta WHERE post_id = ${postId} AND meta_key = '${metaKey}'`);
     return meta.length > 0 ? meta[0] : null;
 }
+export const getFullPostMeta = async (postId: number) => {
+    return await runQuery(`SELECT * FROM wp_sya2cn_postmeta WHERE post_id = ${postId}`);
+}
 // group array of objects by a property of the objects
 export const groupBy = (array: any[], key: string) => {
     return array.reduce((acc, cur) => {
@@ -140,6 +143,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
         // (${bookingId}, 'ova_mb_event_id_cal', '1708643128')
     const results = await runQuery(bookingMetaQueries);
     const tickets = [];
+    const eventAddress = 'Put the right address here!!!';
     for (const seat of seats) {
         for (let i = 0; i < seat.amount; i++) {
             const postQuery = `INSERT INTO wp_sya2cn_posts
@@ -162,6 +166,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
                 qrCode,
                 customer,
                 venue,
+                address: eventAddress,
                 seat: seat.seat,
                 ticketId,
             }
@@ -179,7 +184,6 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
 
 }
 export const createTicket = async (ticket: Ticket) => {
-    
     const insertQueries = 
         `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${ticket.ticketId}, 'ova_mb_event_event_id', ${ticket.eventId}),
         (${ticket.ticketId}, 'ova_mb_event_booking_id', ${ticket.bookingId}),
@@ -190,7 +194,7 @@ export const createTicket = async (ticket: Ticket) => {
         (${ticket.ticketId}, 'ova_mb_event_email_customer', '${ticket.customer.email}'),
         (${ticket.ticketId}, 'ova_mb_event_address_customer', '${ticket.customer.address}'),
         (${ticket.ticketId}, 'ova_mb_event_venue', 'a:1:{i:0;s:${ticket.venue.length}:"${ticket.venue}";}'),
-        (${ticket.ticketId}, 'ova_mb_event_address', ''),
+        (${ticket.ticketId}, 'ova_mb_event_address', '${ticket.address}'),
         (${ticket.ticketId}, 'ova_mb_event_data_checkout_field', '[]'),
         (${ticket.ticketId}, 'ova_mb_event_seat', '${ticket.seat}'),
         (${ticket.ticketId}, 'ova_mb_event_date_start', '${ticket.eventStart}'),
@@ -208,51 +212,52 @@ export const createTicket = async (ticket: Ticket) => {
     const results = await runQuery(insertQueries);
     return results;
 }
-// export const createPurchase = async (seats: string[]) => {
-//     // 98976	16388	ova_mb_event_list_seat_book	a:2:{i:0;s:26:"AZUL-VIP-SECC-C3-ASTO-AA23";i:1;s:25:"DIAMANTE-SECC-A3-ASTO-K21";}
 
-//     /**
-//      * Get post of type el_bookings (for prod 18501)
-//      * Get event start from ova_mb_event_date_start (for prod 1710016200)
-//      * Get event end from ova_mb_event_date_end (for prod 1710027900)
-//      * Get event name from ova_mb_event_name_event (for prod Kurt en Concierto)
-//      * Get img id from ova_mb_event_img (for prod 16367)
-//      * From its meta get the seat list from ova_mb_event_list_seat_book. Get the meta_id (for prod 127892)
-//      * From its meta get the event id from ova_mb_event_event_id (for prod 15090)
-//      * Get the booking id from ova_mb_event_booking_id (for prod 18501)
-//      * Venue for prod is Teatro Metropolitano
-//      */
-//     const environment = VERCEL_ENV || 'local';
-//     const config = (eventData as any)[environment];
-//     const { seatListMetaId } = config;
-//     const seatListMeta = await runQuery(`SELECT meta_value FROM wp_sya2cn_postmeta WHERE meta_id = ${seatListMetaId}`);
-//     const metaValue = seatListMeta[0].meta_value;
-//     console.log('seatListMeta:', metaValue);
-//     // return;
-//     const seatList = phpUnserialize.unserialize(metaValue);
-//     console.log('parsedData:', seatList);
-//     let n = Object.keys(seatList).length;
-//     const tickets = [];
-//     for (const seat of seats) {
-//         seatList[n] = seat;
-//         n++;
-//         const postQuery = `INSERT INTO wp_sya2cn_posts
-//         (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
-//         VALUES(1, CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 'Mapa', '', 'publish', 'closed', 'closed', '', 'mapa-270', '', '', CURRENT_TIMESTAMP(), UTC_TIMESTAMP(), '', 0, 'https://boletera.dev-mt.com/el_tickets/mapa-270/', 0, 'el_tickets', '', 0);
-//         `;
-//         const postResult = (await runQuery(postQuery)) as any;
-//         const ticketId = postResult.insertId;
-//         if (!ticketId) throw new Error('No ticketId');
-//         const ticket = { ...config.ticket, qrCode: uuidv4().replace(/-/g, ''), seat, ticketId };
-//         tickets.push(ticket);
-//         await createTicket(ticket);
-//         console.log(`ticket created for seat ${seat}`);
-//     }
-//     console.log(seatList);
-//     const serialized = phpSerialize.serialize(seatList);
-//     console.log('serialized:', serialized);
-//     await runQuery(`UPDATE wp_sya2cn_postmeta set meta_value = '${serialized}' WHERE meta_id = ${seatListMetaId}`);
-//     return tickets;
-   
-// }
+export const getBooking = async (bookingId: number) => {
+    const booking = await getPost(bookingId);
+    const bookingMeta = await getFullPostMeta(bookingId);
+    const ticketIds = await runQuery(`SELECT post_id FROM wp_sya2cn_postmeta WHERE meta_key = 'ova_mb_event_booking_id' and meta_value = ${bookingId}`);
+    const tickets = [];
+    for (const ticketId of ticketIds) {
+        // const ticketPost = await getPost(ticketId.post_id);
+        const ticketMeta = await getFullPostMeta(ticketId.post_id);
+        const venueStr = ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_venue').meta_value;
+        const venue = venueStr.substring(venueStr.indexOf('"') + 1, venueStr.lastIndexOf('"'));
+        const ticket: Ticket = {
+            bookingId,
+            eventId: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_event_id').meta_value),
+            img: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_img').meta_value),
+            eventStart: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_date_start').meta_value),
+            eventEnd: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_date_end').meta_value),
+            eventName: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_name_event').meta_value,
+            qrCode: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_qr_code').meta_value,
+            customer: {
+                name: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_name_customer').meta_value,
+                phone: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_phone_customer').meta_value,
+                email: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_email_customer').meta_value,
+                address: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_address_customer').meta_value,
+            },
+            venue,
+            address: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_address').meta_value,
+            seat: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_seat').meta_value,
+            ticketId: ticketId.post_id,
+        };
+        tickets.push(ticket);
+    }
+    const eventPost = await getPost(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
+    const eventMeta = await getFullPostMeta(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
 
+    const event = {
+        name: eventPost.post_title,
+        date: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_start_date_str').meta_value,
+        img: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_img_thumbnail').meta_value,
+        url: eventPost.guid,
+        description: eventPost.post_content,
+        tickets
+    }
+    return {
+        bookingId,
+        event,
+        tickets,
+    };
+}
