@@ -414,6 +414,7 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
 <?php endif; //if message ?>
 <?php if( current_user_can( 'administrator' ) ){
 	echo '<button id="buyAll" class="btn btn-primary" onclick="buyAll()"><i>Comprar todos los asientos</i></button>';
+    echo '<button id="refreshPage" style="display: none" class="btn btn-primary" onclick="refreshPage()"><i>Refrescar</i></button>';
 } ?>
 
 
@@ -439,9 +440,18 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
 			var payload = document.getElementsByClassName('cart-info').item(0).outerHTML;
 			// delete local storage item named 15857_1708643128 and manually refresh the page after printing tickets
 			localStorage.removeItem(eventId+'_'+idCal);
-			// window.open('https://boletera.vercel.app/?eventId='+eventId+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
-			window.open('http://localhost:5173/?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
+            var el = window.document.getElementsByClassName('imp-ui-wrap');
+            document.getElementById('buyAll').style.display = 'none';
+            document.getElementById('refreshPage').style.display = '';
+            if (el && el.length > 0) {
+                el[0].style.display = 'none';
+            }
+            const url = document.location.href.startsWith('https://flashticket.com.mx/') ? 'https://boletera.vercel.app/' : 'https://boletera-git-development-aarostegui-s-team.vercel.app/';
+            window.open(url + '?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
 		}
+        function refreshPage() {
+            window.document.location.reload();
+        }
 	</script>
 <?php endif; ?>
 

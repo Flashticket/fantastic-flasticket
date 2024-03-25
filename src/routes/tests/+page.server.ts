@@ -1,3 +1,4 @@
+import type { SeatType, TicketMapType } from '$lib/types.js';
 import * as cheerio from 'cheerio';
 
 
@@ -85,7 +86,7 @@ export const load = async (request) => {
 	</div>
 </div>`;
 console.log(encodeURIComponent(btoa(cartInfoHtml)));
-const seats: { seat: string, amount: number }[] = [];
+const seats: SeatType[] = [];
     const $ = cheerio.load(cartInfoHtml);
     $('.item-info-map').map((i, el) => {
         console.log('info-map', i);

@@ -1,3 +1,4 @@
+import type { SeatType, TicketMapType } from '$lib/types.js';
 import * as cheerio from 'cheerio';
 
 export const load = async (request) => {    
@@ -15,7 +16,7 @@ export const load = async (request) => {
     }
     const seatsString = atob(seatsStringEncoded);
     console.log('seatsString', seatsString);
-    const seats: { seat: string, amount: number, type: 'area' | 'map' }[] = [];
+    const seats: SeatType[] = [];
     const $ = cheerio.load(seatsString);
     $('.item-info-map').map((i, el) => {
         console.log('info-map', i);
@@ -52,6 +53,29 @@ export const load = async (request) => {
             // price: parseInt(price),
         });
     });
+    $('.wp-seat-info').map((i, el) => {
+        console.log('wp-seat-info', i);
+        const span = $(el).find('span');
+        console.log('span', span);
+        span.map((i, el) => {
+            let ticketId='unknown';
+            if (el.parentNode?.parentNode?.parentNode) {
+                ticketId = $(el.parentNode.parentNode.parentNode).attr('class')?.replace('item-info ', '') || 'unknown';
+            }
+            console.log(el.parentNode?.parentNode && $(el.parentNode?.parentNode).attr('class'))
+            const id = $(el).text();
+            console.log('seat', id);
+            // console.log('price', price);
+            seats.push({
+                seat: id,
+                amount: 1,
+                type: 'dropdown',
+                ticketId,
+                // price: parseInt(price),
+            });
+        });
+    });
+
     // wait a bit
     await new Promise(resolve => setTimeout(resolve, 1000));
     console.log('seats', seats);
