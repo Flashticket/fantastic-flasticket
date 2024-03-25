@@ -28,4 +28,22 @@ export interface Event {
     url: string;
     description: string;
     tickets: Ticket[];
+    customer: {
+        name: string;
+        phone: string;
+        email: string;
+        address: string;
+    };
+}
+
+export interface Booking {
+    bookingId: number;
+    customer: {
+        name: string;
+        phone: string;
+        email: string;
+        address: string;
+    };
+    event: Event;
+    tickets: Ticket[];
 }

@@ -8,7 +8,7 @@
 
 </script>
 
-{#each tickets as ticket, i}
+{#each (tickets || []) as ticket, i}
   <div class="wrapper avoidInnerBreak">
     <div class="col1">
       <div class="logoWrap">
