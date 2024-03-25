@@ -23,6 +23,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sendgrid/mail": "^8.1.1",
 		"autoprefixer": "^10.4.19",
 		"cheerio": "^1.0.0-rc.12",
 		"moment": "^2.30.1",
