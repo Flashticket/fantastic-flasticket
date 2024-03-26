@@ -58,21 +58,29 @@ export const load = async (request) => {
         const span = $(el).find('span');
         console.log('span', span);
         span.map((i, el) => {
-            let ticketId='unknown';
+            let ticketId=null;
             if (el.parentNode?.parentNode?.parentNode) {
                 ticketId = $(el.parentNode.parentNode.parentNode).attr('class')?.replace('item-info ', '') || 'unknown';
+                // is ticketId a number?
+                if (isNaN(parseInt(ticketId))) {
+                    ticketId = null;
+                }
             }
             console.log(el.parentNode?.parentNode && $(el.parentNode?.parentNode).attr('class'))
             const id = $(el).text();
             console.log('seat', id);
             // console.log('price', price);
-            seats.push({
-                seat: id,
-                amount: 1,
-                type: 'dropdown',
-                ticketId,
-                // price: parseInt(price),
-            });
+            if (ticketId) {
+                seats.push({
+                    seat: id,
+                    amount: 1,
+                    type: 'dropdown',
+                    ticketId,
+                    // price: parseInt(price),
+                });
+            } else {
+                console.log('no ticketId', id)
+            }
         });
     });
 

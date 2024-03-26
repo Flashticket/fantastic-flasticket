@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql';
 
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
-import type { SeatType, Ticket, TicketMapType } from '$lib/types';
+import type { Booking, SeatType, Ticket, TicketMapType } from '$lib/types';
 
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
@@ -88,8 +88,8 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
     const customer = {
         name: 'Taquilla',
         phone: '123',
-        email: 'Taquilla',
-        address: '',
+        email: 'andoni.arostegui@stacknvault.com',
+        address: 'Internal address',
     };
     const venue = 'Teatro Metropolitano';
     
@@ -180,6 +180,12 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
     const ticketIdsStr = tickets.map((r: Ticket, index) => `i: ${index};i:${r.ticketId}`).join(';');
     const ticketListQuery = `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_record_ticket_ids', 'a:${tickets.length}:{${ticketIdsStr};}')`;
     await runQuery(ticketListQuery);
+
+    await runQuery(`INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_name', '${customer.name}')`);
+    await runQuery(`INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_phone', '${customer.phone}')`);
+    await runQuery(`INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_email', '${customer.email}')`);
+    await runQuery(`INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_address', '${customer.address}')`);
+
     return { bookingId, tickets };
 
 }
@@ -214,7 +220,7 @@ export const createTicket = async (ticket: Ticket) => {
 }
 
 export const getBooking = async (bookingId: number) => {
-    const booking = await getPost(bookingId);
+    // const booking = await getPost(bookingId);
     const bookingMeta = await getFullPostMeta(bookingId);
     const ticketIds = await runQuery(`SELECT post_id FROM wp_sya2cn_postmeta WHERE meta_key = 'ova_mb_event_booking_id' and meta_value = ${bookingId}`);
     const tickets = [];
@@ -249,15 +255,21 @@ export const getBooking = async (bookingId: number) => {
 
     const event = {
         name: eventPost.post_title,
-        date: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_start_date_str').meta_value,
-        img: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_img_thumbnail').meta_value,
+        date: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_start_date_str')?.meta_value || '',
+        img: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_img_thumbnail')?.meta_value || '',
         url: eventPost.guid,
         description: eventPost.post_content,
-        tickets
+        tickets,
     }
     return {
         bookingId,
+        customer: {
+            name: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_name')?.meta_value,
+            phone: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_phone')?.meta_value,
+            email: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_email')?.meta_value,
+            address: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_address')?.meta_value,
+        },
         event,
         tickets,
-    };
+    } as Booking;
 }
