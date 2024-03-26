@@ -1,18 +1,25 @@
-import sgMail from "@sendgrid/mail";
+import sgMail, { type MailDataRequired } from "@sendgrid/mail";
 import type { AttachmentJSON } from "@sendgrid/helpers/classes/attachment";
-import { SENDGRID_API_KEY, APY_TOKEN } from '$env/static/private'
+import { SENDGRID_API_KEY } from '$env/static/private'
 import axios from 'axios';
 // send email via sendgrid with template and attachment
-export const sendEmail = async (from: string, to: string, subject: string, html: string, attachments?: AttachmentJSON[]) => {
+export const sendEmail = async (from: string, to: string, subject: string, html?: string, templateId?: string, dynamic_template_data?: any, attachments?: AttachmentJSON[]) => {
     sgMail.setApiKey(SENDGRID_API_KEY || '');
+    if (!templateId && !html) {
+        throw new Error('No templateId or html provided');
+    }
+
     const msg = {
         to,
         from,
         subject,
-        html,
+        ...(html && { html }),
+        ...(templateId && { templateId }),
+        ...(dynamic_template_data && { dynamic_template_data }),
         attachments,
     };
-    await sgMail.send(msg);
+    console.log('msg', msg);
+    return await sgMail.send(msg);
 }
 // export const takeScreenshot = async (url: string, fileName: string) => {
 //     var options = {
@@ -36,7 +43,7 @@ export const sendEmail = async (from: string, to: string, subject: string, html:
 //     return str;
 // }
 export const takeScreenshot = async (url: string) => {
-    const screenshotRequestURL = `https://api.urlbox.io/v1/TmDsstCwzocSSbwn/pdf?full_page=false&url=${encodeURIComponent(url)}`
+    const screenshotRequestURL = `https://api.urlbox.io/v1/TmDsstCwzocSSbwn/pdf?full_page=false&force=true&url=${encodeURIComponent(url)}`
     console.log('Requesting screenshot', screenshotRequestURL);
     const response = await fetch(screenshotRequestURL)
     if (!response.ok) {
