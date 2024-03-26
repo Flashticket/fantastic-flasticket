@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -29,6 +29,7 @@
 		"cheerio": "^1.0.0-rc.12",
 		"moment": "^2.30.1",
 		"mysql": "^2.18.1",
+		"passkit-generator": "^3.1.11",
 		"postcss": "^8.4.38",
 		"qrcode": "^1.5.3",
 		"tailwindcss": "^3.4.1",
