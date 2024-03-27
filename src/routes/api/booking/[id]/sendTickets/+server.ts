@@ -11,7 +11,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
         console.log('baseUrl', baseUrl);
         const booking = await getBooking(parseInt(id));
         console.log('booking', booking);
-        const base64File = await takeScreenshot(`https://boletera.vercel.app/pages/booking/${id}`);
+        const base64File = await takeScreenshot(`https://app.flashticket.com.mx/pages/booking/${id}`);
         // console.log('base64File', base64File);
         const data = {
             eventName: booking.event.name,
