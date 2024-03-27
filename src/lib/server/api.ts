@@ -276,5 +276,12 @@ export const getBooking = async (bookingId: number) => {
         },
         event,
         tickets,
+        price: {
+            discount: 0,
+            tax: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_tax')?.meta_value || '0'),
+            systemFee: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_system_fee')?.meta_value || '0'),
+            totalBeforeTax: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_total')?.meta_value || '0'),
+            totalPrice: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_total_after_tax')?.meta_value || '0'),
+        }
     } as Booking;
 }
