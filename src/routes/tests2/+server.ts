@@ -127,7 +127,8 @@ if (!booking.tickets || !booking.tickets.length) {
 	throw new Error('No tickets found');
 }
 const ticket = booking.tickets[0];
-const buffer = await generatePass(ticket);
+const baseUrl = new URL(request.url).origin;
+const buffer = await generatePass(url, ticket);
 return new Response(buffer, {
 				headers: {
 					"Content-Type": "application/vnd.apple.pkpass",

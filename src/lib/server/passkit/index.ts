@@ -4,13 +4,15 @@ import moment from "moment";
 
 const { PKPass } = pk.default;
 import { WWDR, EVENT_CERT_KEY, EVENT_CERT, EVENT_CERT_KEY_PASSPHRASE, TEAM_IDENTIFIER } from '$env/static/private' 
-const fetchBuffer = async (eventId: number, resource: string) => {
-	const res = await fetch(`http://localhost:5173/passkit/${eventId}/${resource}`);
+const fetchBuffer = async (baseUrl: string, eventId: number, resource: string) => {
+    const url = `${baseUrl}/passkit/${eventId}/${resource}`;
+    console.log('fetchBuffer', url);
+	const res = await fetch(url);
 	const data = await res.arrayBuffer();
 	return Buffer.from(data);
 }
 
-export const generatePass = async (ticket: Ticket) => {
+export const generatePass = async (baseUrl: string, ticket: Ticket) => {
     try {
         console.log('Generating pass...', { WWDR, EVENT_CERT_KEY, EVENT_CERT, EVENT_CERT_KEY_PASSPHRASE, TEAM_IDENTIFIER });
 		
@@ -25,14 +27,14 @@ export const generatePass = async (ticket: Ticket) => {
 		console.log('Generating pass...');
 		const pass = new PKPass(
 			{
-				"background.png": await fetchBuffer(ticket.eventId, 'background.png'),
-				"background@2x.png": await fetchBuffer(ticket.eventId, 'background@2x.png'),
-				"icon.png": await fetchBuffer(ticket.eventId, 'icon.png'),
-				"icon@2x.png": await fetchBuffer(ticket.eventId, 'icon@2x.png'),
-				"logo.png": await fetchBuffer(ticket.eventId, 'logo.png'),
-				"logo@x2.png": await fetchBuffer(ticket.eventId, 'logo@2x.png'),
-				"thumbnail.png": await fetchBuffer(ticket.eventId, 'thumbnail.png'),
-				"thumbnail@2x.png": await fetchBuffer(ticket.eventId, 'thumbnail@2x.png'),
+				"background.png": await fetchBuffer(baseUrl, ticket.eventId, 'background.png'),
+				"background@2x.png": await fetchBuffer(baseUrl, ticket.eventId, 'background@2x.png'),
+				"icon.png": await fetchBuffer(baseUrl, ticket.eventId, 'icon.png'),
+				"icon@2x.png": await fetchBuffer(baseUrl, ticket.eventId, 'icon@2x.png'),
+				"logo.png": await fetchBuffer(baseUrl, ticket.eventId, 'logo.png'),
+				"logo@x2.png": await fetchBuffer(baseUrl, ticket.eventId, 'logo@2x.png'),
+				"thumbnail.png": await fetchBuffer(baseUrl, ticket.eventId, 'thumbnail.png'),
+				"thumbnail@2x.png": await fetchBuffer(baseUrl, ticket.eventId, 'thumbnail@2x.png'),
 			},
 			{
 				signerCert,

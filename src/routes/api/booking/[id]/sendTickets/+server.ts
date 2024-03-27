@@ -7,6 +7,8 @@ import moment from "moment";
 export const POST = async ({ request, params, url }: { request: RequestEvent, params: any, url: URL}) => {
     try {
         const { id } = params;
+        const baseUrl = new URL(request.url).origin;
+        console.log('baseUrl', baseUrl);
         const booking = await getBooking(parseInt(id));
         console.log('booking', booking);
         const base64File = await takeScreenshot(`https://boletera.vercel.app/pages/booking/${id}`);
@@ -19,7 +21,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
             totalPrice: 1234.56,
         }
         const passkitFiles = await Promise.all(booking.tickets.map(async (ticket, index) => {
-            const pass = await generatePass(ticket);
+            const pass = await generatePass(baseUrl, ticket);
             const base64File = pass.toString('base64');
             return {
                 content: base64File,
