@@ -22,7 +22,7 @@ export interface Ticket {
 export interface Event {
     id: number;
     name: string;
-    date: string;
+    date: number;
     venue: string;
     img: string;
     url: string;

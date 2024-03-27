@@ -255,7 +255,7 @@ export const getBooking = async (bookingId: number) => {
 
     const event = {
         name: eventPost.post_title,
-        date: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_start_date_str')?.meta_value || '',
+        date: parseInt(eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_start_date_str')?.meta_value || '0'),
         img: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_img_thumbnail')?.meta_value || '',
         url: eventPost.guid,
         description: eventPost.post_content,
