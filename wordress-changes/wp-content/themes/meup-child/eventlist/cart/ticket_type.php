@@ -446,7 +446,7 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
             if (el && el.length > 0) {
                 el[0].style.display = 'none';
             }
-            const url = document.location.href.startsWith('https://flashticket.com.mx/') ? 'https://boletera.vercel.app/' : 'https://boletera-git-development-aarostegui-s-team.vercel.app/';
+            const url = document.location.href.startsWith('https://flashticket.com.mx/') ? 'https://app.flashticket.com.mx/' : 'https://boletera-git-development-aarostegui-s-team.vercel.app/';
             window.open(url + '?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
 		}
         function refreshPage() {
