@@ -143,7 +143,8 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
         // (${bookingId}, 'ova_mb_event_id_cal', '1708643128')
     const results = await runQuery(bookingMetaQueries);
     const tickets = [];
-    const eventAddress = 'Put the right address here!!!';
+    const eventMeta = await getFullPostMeta(eventId);
+    const eventAddress = eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_address').meta_value;
     for (const seat of seats) {
         for (let i = 0; i < seat.amount; i++) {
             const postQuery = `INSERT INTO wp_sya2cn_posts
@@ -224,6 +225,8 @@ export const getBooking = async (bookingId: number) => {
     const bookingMeta = await getFullPostMeta(bookingId);
     const ticketIds = await runQuery(`SELECT post_id FROM wp_sya2cn_postmeta WHERE meta_key = 'ova_mb_event_booking_id' and meta_value = ${bookingId}`);
     const tickets = [];
+    const eventPost = await getPost(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
+    const eventMeta = await getFullPostMeta(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
     for (const ticketId of ticketIds) {
         // const ticketPost = await getPost(ticketId.post_id);
         const ticketMeta = await getFullPostMeta(ticketId.post_id);
@@ -250,8 +253,6 @@ export const getBooking = async (bookingId: number) => {
         };
         tickets.push(ticket);
     }
-    const eventPost = await getPost(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
-    const eventMeta = await getFullPostMeta(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
 
     const event = {
         name: eventPost.post_title,
