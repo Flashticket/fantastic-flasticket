@@ -13,12 +13,16 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
         console.log('booking', booking);
         const base64File = await takeScreenshot(`https://app.flashticket.com.mx/pages/booking/${id}`);
         // console.log('base64File', base64File);
+        let MXN = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
         const data = {
             eventName: booking.event.name,
             customerName: booking.customer.name,
             eventDate: moment(new Date(booking.event.date * 1000)).format('DD/MM/YYYY hh:mm A'),
             numberOfTickets: booking.tickets.length,
-            totalPrice: booking.price.totalPrice,
+            totalPrice: MXN.format(booking.price.totalPrice),
         }
         const passkitFiles = await Promise.all(booking.tickets.map(async (ticket, index) => {
             const pass = await generatePass(baseUrl, ticket);
