@@ -4,6 +4,7 @@ import type { RequestEvent } from "@sveltejs/kit"
 import { SENDGRID_TEMPLATE_ID } from '$env/static/private';
 import { generatePass } from "$lib/server/passkit";
 import moment from "moment";
+export const maxDuration = 0.5;
 export const POST = async ({ request, params, url }: { request: RequestEvent, params: any, url: URL}) => {
     try {
         const { id } = params;
