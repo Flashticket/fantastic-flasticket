@@ -1,5 +1,12 @@
 export type TicketMapType = 'area' | 'map' | 'dropdown';
-export type SeatType = { seat: string, amount: number, type: TicketMapType, ticketId?: string };
+export type SeatType = { seat: string, amount: number, type: TicketMapType, ticketId?: string, price: number };
+export type PriceType = {
+    discount: number;
+    tax: number;
+    systemFee: number;
+    totalBeforeTax: number;
+    totalPrice: number;
+}
 export interface Ticket {
     eventId: number;
     bookingId: number;
@@ -46,4 +53,5 @@ export interface Booking {
     };
     event: Event;
     tickets: Ticket[];
+    price: PriceType;
 }

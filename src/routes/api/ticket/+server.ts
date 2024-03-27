@@ -17,8 +17,8 @@ const parsedData = (requestEvent: any) => {
 export const POST = async ({ request, params, url }: { request: RequestEvent, params: any, url: URL}) => {
     const body = await parsedData(request);
     console.log('body:', body);
-    const { seats, eventId, idCal } = body;
-    const results = await bookSeats(eventId, idCal, seats);
+    const { seats, eventId, idCal, price } = body;
+    const results = await bookSeats(eventId, idCal, seats, price);
     return new Response(JSON.stringify(results), {
         headers: {
             'content-type': 'application/json'

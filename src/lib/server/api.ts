@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql';
 
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
-import type { Booking, SeatType, Ticket, TicketMapType } from '$lib/types';
+import type { Booking, PriceType, SeatType, Ticket, TicketMapType } from '$lib/types';
 
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
@@ -67,7 +67,7 @@ export const getSeatBook = (seats: SeatType[]) => {
         return `i:${ticketId};a:${groupedSeats[ticketId].length}:{${groupedSeats[ticketId].map((s: SeatType, i: number) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
     })}}`;
 }
-export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[]) => {
+export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[], price: PriceType) => {
     console.log('seats:', seats);
     // const seatBook = 'a:3:{i:0;s:23:"VERDE-SECC-GEN-DER-ASTO";i:1;s:30:"PLATINUM_ROJO-SECC-B1-ASTO-X44";i:2;s:30:"ORO_AMARILLO-SECC-C1-ASTO-FF45";}';
     const seatBook = getSeatBook(seats);
@@ -120,10 +120,14 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
         (${bookingId}, 'ova_mb_event_title_event', '${eventName}'),
         (${bookingId}, 'ova_mb_event_id_event', '${eventId}'),
         (${bookingId}, 'ova_mb_event_id_cal', '${idCal}'),
-        (${bookingId}, 'ova_mb_event_arr_area', '${areaSeatsStr}')
+        (${bookingId}, 'ova_mb_event_arr_area', '${areaSeatsStr}'),
+        (${bookingId}, 'ova_mb_event_system_fee', '${price.systemFee}'),
+        (${bookingId}, 'ova_mb_event_tax', '${price.tax}'),
+        (${bookingId}, 'ova_mb_event_total', '${price.totalBeforeTax}'),
+        (${bookingId}, 'ova_mb_event_total_after_tax', '${price.totalPrice}')
         `;
         
-        // (${bookingId}, 'ova_mb_event_system_fee', '110')
+        
         // (${bookingId}, 'ova_mb_event_orderid', '16489'),
         // (${bookingId}, 'ova_mb_event_profit_status', ''),
         // (${bookingId}, 'ova_mb_event_id_customer', '10'),

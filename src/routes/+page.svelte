@@ -63,15 +63,13 @@
   const createTickets = async () => {
     busy = true;
     try {
-      const seats = data.seats as SeatType[];
-      const eventId = data.eventId;
-      const idCal = data.idCal;
+      
       const res = await fetch("/api/ticket", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ seats, eventId, idCal }),
+        body: JSON.stringify(data),
       });
       const resData = await res.json();
       if (!resData.bookingId) {

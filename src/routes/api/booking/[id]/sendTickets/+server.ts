@@ -18,7 +18,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
             customerName: booking.customer.name,
             eventDate: moment(new Date(booking.event.date * 1000)).format('DD/MM/YYYY hh:mm A'),
             numberOfTickets: booking.tickets.length,
-            totalPrice: 1234.56,
+            totalPrice: booking.price.totalPrice,
         }
         const passkitFiles = await Promise.all(booking.tickets.map(async (ticket, index) => {
             const pass = await generatePass(baseUrl, ticket);
