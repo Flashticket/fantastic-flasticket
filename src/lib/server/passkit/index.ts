@@ -14,7 +14,6 @@ const fetchBuffer = async (baseUrl: string, eventId: number, resource: string) =
 
 export const generatePass = async (baseUrl: string, ticket: Ticket) => {
     try {
-        console.log('Generating pass...', { WWDR, EVENT_CERT_KEY, EVENT_CERT, EVENT_CERT_KEY_PASSPHRASE, TEAM_IDENTIFIER });
 		
 		const wwdr = WWDR;
 		const signerCert = EVENT_CERT;
