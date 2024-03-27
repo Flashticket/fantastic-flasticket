@@ -88,24 +88,31 @@ export const generatePass = async (baseUrl: string, ticket: Ticket) => {
 		pass.secondaryFields.push(
 				  {
 					"key" : "loc",
-					"label" : "LOCATION",
+					"label" : "LUGAR",
 					"value" : ticket.address
 				  }
 		);
 		pass.auxiliaryFields.push(
 				  {
 					"key" : "date",
-					"label" : "DATE",
+					"label" : "FECHA",
 					"value" : moment(eventDate).format('DD/MM/YYYY')
 				  }
 		);
 		pass.auxiliaryFields.push(
 			{
 			  "key" : "time",
-			  "label" : "TIME",
+			  "label" : "HORA",
 			  "value" : moment(eventDate).format('hh:mm A')
 			}
-  );
+        );
+        pass.auxiliaryFields.push(
+			{
+			  "key" : "seat",
+			  "label" : "ASIENTO",
+			  "value" : ticket.seat
+			}
+        );
 			  
 		// pass.transitType = "PKTransitTypeAir";
 		pass.setBarcodes(ticket.qrCode); // Random value

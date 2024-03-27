@@ -122,13 +122,13 @@ export const GET = async (request) => {
 // 		return new Response(err.message, { status: 500 });
 // 	}
 
-const booking = await getBooking(16815);
+const booking = await getBooking(16852);
 if (!booking.tickets || !booking.tickets.length) {
 	throw new Error('No tickets found');
 }
 const ticket = booking.tickets[0];
 const baseUrl = new URL(request.url).origin;
-const buffer = await generatePass(url, ticket);
+const buffer = await generatePass(baseUrl, ticket);
 return new Response(buffer, {
 				headers: {
 					"Content-Type": "application/vnd.apple.pkpass",

@@ -1,7 +1,7 @@
 import { getBooking } from "$lib/server/api";
 import { sendEmail, takeScreenshot } from "$lib/server/util";
 import type { RequestEvent } from "@sveltejs/kit"
-import { SENDGRID_TEMPLATE_ID } from '$env/static/private';
+import { SENDGRID_TEMPLATE_ID, EMAIL_FROM } from '$env/static/private';
 import { generatePass } from "$lib/server/passkit";
 import moment from "moment";
 export const POST = async ({ request, params, url }: { request: RequestEvent, params: any, url: URL}) => {
@@ -30,7 +30,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
                 disposition: "attachment"
             }
         }));
-        const res = await sendEmail('Contact <contact@wotoch.com>', booking.customer.email, 'Tickets', undefined, SENDGRID_TEMPLATE_ID, data, [{
+        const res = await sendEmail(`Flash Ticket <${EMAIL_FROM}>`, booking.customer.email, 'Tickets', undefined, SENDGRID_TEMPLATE_ID, data, [{
             content: base64File,
             filename: "tickets.pdf",
             type: "application/pdf",
