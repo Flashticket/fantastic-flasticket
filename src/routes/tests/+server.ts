@@ -3,6 +3,11 @@ import fs from "fs";
 
 export const GET = async (request) => {
     try {
+		let MXN = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+		console.log(MXN.format(123456));
 		/** Each, but last, can be either a string or a Buffer. See API Documentation for more */
 		const wwdr = fs.readFileSync('./passkit/certs/AppleWWDRCAG4.pem', 'utf8');
 		const signerCert = fs.readFileSync('./passkit/certs/pass.pem', 'utf8');

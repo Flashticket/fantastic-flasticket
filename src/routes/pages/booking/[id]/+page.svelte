@@ -12,7 +12,7 @@
   <div class="wrapper avoidInnerBreak">
     <div class="col1">
       <div class="logoWrap">
-        <img src="/LOGO-A.svg" alt="logo" width="160" height="auto" />
+        <img src="/LOGO-A.svg" alt="logo" width="90" height="auto" />
       </div>
       <div class="content">
         <p>Evento (ID): <b>{ticket.eventId}</b></p>
@@ -35,18 +35,22 @@
       <div class="content">
         <p><b>Asiento: </b>{ticket.seat}</p>
       </div>
-      <QrCode text={ticket.qrCode} />
+      <div class="flex flex-row">
+        <QrCode text={ticket.qrCode} />
+        <p class="legalText">
+          Este boleto solo permite la entrada al evento especificado, válido solo
+          para la fecha, hora y evento señalado que aparece en el presente boleto.
+          El titular debe portarlo durante su permanencia en el evento o recinto.
+          Ocupar la seccion mencionada y mostrarlo al personal autorizado en caso
+          del ser requerido. Si el evento se realiza no habrá reembolso alguno por
+          boletos no utilizados, perdidos o robados, con raspaduras o
+          enmendaduras. "Todos los eventos estan sujetos a cargos por servicio
+          adicional al precio del boleto"
+        </p>
+      </div>
+      
 
-      <p class="legalText">
-        Este boleto solo permite la entrada al evento especificado, válido solo
-        para la fecha, hora y evento señalado que aparece en el presente boleto.
-        El titular debe portarlo durante su permanencia en el evento o recinto.
-        Ocupar la seccion mencionada y mostrarlo al personal autorizado en caso
-        del ser requerido. Si el evento se realiza no habrá reembolso alguno por
-        boletos no utilizados, perdidos o robados, con raspaduras o
-        enmendaduras. "Todos los eventos estan sujetos a cargos por servicio
-        adicional al precio del boleto"
-      </p>
+      
     </div>
   </div>
 {/each}
@@ -68,41 +72,47 @@
   }
 
   .col1 {
-    width: 25%;
+    width: 25mm;
     border-right: 1px solid #000;
   }
 
   .col1 .logoWrap {
     display: block;
     margin: auto;
-    width: 117px;
-    height: 170px;
+    width: 50px;
+    height: 50px;
+    padding: 3mm;
   }
 
   .col1 img {
-    margin-top: 40px;
+    margin-top: 10px;
     margin-left: -23px;
     transform: rotate(-90deg);
   }
 
   .col1 .content {
+    transform: rotate(-90deg);
     text-align: center;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    /* padding-bottom: 10px;
+    padding-top: 10px; */
     text-transform: uppercase;
+  }
+  .col1 .content p, .col1 .content p b {
+    font-size: 7px;
   }
 
   .col2 {
     width: 75%;
-    height: 100%;
+    height: 50%;
     padding: 10px;
     padding-bottom: 0;
     text-align: center;
   }
 
   .col2 .legalText {
-    padding-top: 5px;
-    font-size: 8px;
+    /* padding-top: 5px; */
+    padding-left: 5px;
+    font-size: 7px;
     text-align: left;
   }
 
@@ -112,13 +122,18 @@
   }
 
   .col2 .mainInfo p {
-    font-size: 13px;
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+  .col2 .mainInfo h3 {
+    font-size: 8px;
     text-transform: uppercase;
   }
 
-  .col2 .content {
-    padding-top: 10px;
-    padding-bottom: 10px;
+  .col2 .content, .col2 .content p, .col2 .content p b {
+    font-size: 8px;
+    /* padding-top: 10px;
+    padding-bottom: 10px; */
   }
 
   @media screen {
@@ -133,7 +148,7 @@
   @media print {
     @page {
       /* size: A5 landscape; */
-      size: 279.4mm 76mm;
+      size: 140mm 50mm;
       margin: 5mm 5mm 5mm 5mm;
       print-color-adjust: exact;
     }

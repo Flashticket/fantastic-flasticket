@@ -413,8 +413,8 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
 	<p class="error-item"><?php echo esc_html($el_message_cart); ?></p>
 <?php endif; //if message ?>
 <?php if( current_user_can( 'administrator' ) ){
-	echo '<button id="buyAll" class="btn btn-primary" onclick="buyAll()"><i>Comprar todos los asientos</i></button>';
-    echo '<button id="refreshPage" style="display: none" class="btn btn-primary" onclick="refreshPage()"><i>Refrescar</i></button>';
+	echo '<button id="buyAll" style="position:fixed; height:60px; bottom:40px; right:40px; background-color:#0C9; color:#FFF; border-radius:50px; text-align:center; box-shadow: 2px 2px 3px #999;" onclick="buyAll()"><i>Comprar todos los asientos</i></button>';
+    echo '<button id="refreshPage" style="position:fixed; height:60px; bottom:40px; right:40px; background-color:#0C9; color:#FFF; border-radius:50px; text-align:center; box-shadow: 2px 2px 3px #999; display: none" onclick="refreshPage()"><i>Refrescar</i></button>';
 } ?>
 
 
@@ -446,7 +446,7 @@ if ( $type_system_fee === 'amount' ) $percent_system_fee = 0;
             if (el && el.length > 0) {
                 el[0].style.display = 'none';
             }
-            const url = document.location.href.startsWith('https://flashticket.com.mx/') ? 'https://boletera.vercel.app/' : 'https://boletera-git-development-aarostegui-s-team.vercel.app/';
+            const url = document.location.href.startsWith('https://flashticket.com.mx/') ? 'https://app.flashticket.com.mx/' : 'https://app.boletera.dev-mt.com/';
             window.open(url + '?eventId='+eventId+'&idCal='+idCal+'&seats='+encodeURIComponent(btoa(payload)), '_blank');
 		}
         function refreshPage() {

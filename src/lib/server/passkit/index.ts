@@ -14,7 +14,6 @@ const fetchBuffer = async (baseUrl: string, eventId: number, resource: string) =
 
 export const generatePass = async (baseUrl: string, ticket: Ticket) => {
     try {
-        console.log('Generating pass...', { WWDR, EVENT_CERT_KEY, EVENT_CERT, EVENT_CERT_KEY_PASSPHRASE, TEAM_IDENTIFIER });
 		
 		const wwdr = WWDR;
 		const signerCert = EVENT_CERT;
@@ -89,24 +88,31 @@ export const generatePass = async (baseUrl: string, ticket: Ticket) => {
 		pass.secondaryFields.push(
 				  {
 					"key" : "loc",
-					"label" : "LOCATION",
+					"label" : "LUGAR",
 					"value" : ticket.address
 				  }
 		);
 		pass.auxiliaryFields.push(
 				  {
 					"key" : "date",
-					"label" : "DATE",
+					"label" : "FECHA",
 					"value" : moment(eventDate).format('DD/MM/YYYY')
 				  }
 		);
 		pass.auxiliaryFields.push(
 			{
 			  "key" : "time",
-			  "label" : "TIME",
+			  "label" : "HORA",
 			  "value" : moment(eventDate).format('hh:mm A')
 			}
-  );
+        );
+        pass.auxiliaryFields.push(
+			{
+			  "key" : "seat",
+			  "label" : "ASIENTO",
+			  "value" : ticket.seat
+			}
+        );
 			  
 		// pass.transitType = "PKTransitTypeAir";
 		pass.setBarcodes(ticket.qrCode); // Random value
