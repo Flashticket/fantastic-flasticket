@@ -21,6 +21,11 @@ if ( ! function_exists('el_sendmail_by_booking_id') ) {
 		// 	'headers'     => array(),
 		// ) );
 		$ch = curl_init($finalUrl);
+		$headers = [
+			'Host: app.boletera.dev-mt.com',
+			'Accept: */*'
+		];
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 300);
