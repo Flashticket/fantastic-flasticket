@@ -1,9 +1,14 @@
 import { getBooking } from "$lib/server/api";
-import { sendEmail, takeScreenshot } from "$lib/server/util";
+import { corsHeaders, sendEmail, takeScreenshot } from "$lib/server/util";
 import type { RequestEvent } from "@sveltejs/kit"
 import { SENDGRID_TEMPLATE_ID, EMAIL_FROM } from '$env/static/private';
 import { generatePass } from "$lib/server/passkit";
 import moment from "moment";
+export const OPTIONS = async (request) => {
+    return new Response(null, {
+        headers: corsHeaders,
+    });
+}
 export const POST = async ({ request, params, url }: { request: RequestEvent, params: any, url: URL}) => {
     try {
         const { id } = params;
@@ -43,13 +48,15 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
         ]);
         return new Response(JSON.stringify({ code: 0, message: 'ok'}), {
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                ...corsHeaders
             }
         });
     } catch (e) {
         return new Response(JSON.stringify({ error: e.message }), {
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                ...corsHeaders
             }
         });
     }

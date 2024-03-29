@@ -16,15 +16,25 @@ if ( ! function_exists('el_sendmail_by_booking_id') ) {
 		error_log("baseUrl: {$baseUrl}");
 		$finalUrl = "{$baseUrl}/api/booking/{$booking_id}/sendTickets";
 		error_log("finalUrl: {$finalUrl}");
-		$response = wp_remote_post( $finalUrl, array('timeout'     => 300) );
+		// $response = wp_remote_post( $finalUrl, array(
+		// 	'timeout'     => 300,
+		// 	'headers'     => array(),
+		// ) );
+		$ch = curl_init($finalUrl);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+		$response = curl_exec($ch);
+
         $data = []; // Initialize an empty array
-        if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
-			error_log("Error: " . print_r($response, true));
+        if ( curl_errno($ch) ) {
+			error_log("Error: " . curl_error($ch));
             $data['status'] = "failure";
         } else {
-			error_log("Success: " . print_r($response, true));
+			error_log("Success: ");
             $data['status'] = "success";
         }
+		curl_close($ch);
         return $data;
         // $settings_mail 		= EL()->options->mail;
 		// $setting_mail_to 	= $settings_mail->get( 'new_booking_sendmail' );
