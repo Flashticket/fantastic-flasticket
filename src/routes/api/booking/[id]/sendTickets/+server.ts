@@ -12,7 +12,7 @@ export const OPTIONS = async (request) => {
 export const POST = async ({ request, params, url }: { request: RequestEvent, params: any, url: URL}) => {
     try {
         // log headers
-        console.log('request.headers', request.request.headers);
+        // console.log('request.headers', request.request.headers);
         const { id } = params;
         const baseUrl = new URL(request.url).origin;
         console.log('baseUrl', baseUrl);
