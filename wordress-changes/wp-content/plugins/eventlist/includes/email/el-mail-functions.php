@@ -14,7 +14,7 @@ if ( ! function_exists('el_sendmail_by_booking_id') ) {
             $baseUrl = 'https://app.boletera.dev-mt.com';
         }
 		error_log("baseUrl: {$baseUrl}");
-		$finalUrl = "{$baseUrl}/api/booking/{$booking_id}/sendTickets";
+		$finalUrl = "{$baseUrl}/api/booking/{$booking_id}/sendTicketsAsync";
 		error_log("finalUrl: {$finalUrl}");
 		// $response = wp_remote_post( $finalUrl, array(
 		// 	'timeout'     => 300,
