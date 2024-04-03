@@ -75,7 +75,7 @@
       if (!resData.bookingId) {
         alert("Error creating tickets");
       }
-      document.location.href = `/pages/booking/${resData.bookingId}`;
+      document.location.href = `/pages/booking/${resData.bookingId}/printableTickets`;
       // tickets = resData.tickets;
       // bookingId = resData.bookingId;
       // console.log(tickets);

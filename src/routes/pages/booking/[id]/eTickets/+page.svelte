@@ -1,6 +1,5 @@
 <script lang="ts">
-    import type { SeatType, Ticket, TicketMapType } from "$lib/types";
-  import QrCode from "../../../../components/QrCode.svelte";
+  import QrCode from "../../../../../components/QrCode.svelte";
   import moment from "moment";
   export let data;
   const { tickets, bookingId, event } = data;

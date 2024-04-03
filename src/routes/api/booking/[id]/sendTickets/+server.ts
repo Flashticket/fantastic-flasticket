@@ -18,7 +18,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
         console.log('baseUrl', baseUrl);
         const booking = await getBooking(parseInt(id));
         console.log('booking', booking);
-        const base64FilePromise = takeScreenshot(`${baseUrl}/pages/booking/${id}`);
+        const base64FilePromise = takeScreenshot(`${baseUrl}/pages/booking/${id}/eTickets`);
         // console.log('base64File', base64File);
         let MXN = new Intl.NumberFormat('en-US', {
             style: 'currency',

@@ -55,8 +55,6 @@ export const takeScreenshot = async (url: string) => {
 }
 
 
-// https://boletera.vercel.app/pages/booking/16798
-
 export const corsHeaders = {
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Origin': '*',
