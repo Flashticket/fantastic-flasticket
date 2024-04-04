@@ -1,169 +1,255 @@
 <script lang="ts">
+  import "@fontsource/source-sans-pro/400.css";
+  import "@fontsource/source-sans-pro/700.css";
   import QrCode from "../../../../../components/QrCode.svelte";
   import moment from "moment";
   export let data;
   const { tickets, bookingId, event } = data;
   console.log(data);
-
 </script>
 
-{#each (tickets || []) as ticket, i}
-  <div class="wrapper avoidInnerBreak">
-    <div class="col1">
-      <div class="logoWrap">
-        <img src="/LOGO-A.svg" alt="logo" width="90" height="auto" />
+{#each tickets || [] as ticket, i}
+  <div class="page avoidInnerBreak">
+    <div class="header">
+      <img
+        src="/flash_black_on_green.png"
+        alt="logo"
+        width="140"
+        height="auto"
+      />
+    </div>
+
+    <div class="content">
+      <div class="banner">
+        <img src="/passkit/15857/background.png" alt="banner" />
       </div>
-      <div class="content">
-        <p>Evento (ID): <b>{ticket.eventId}</b></p>
-        <p>Lugar: <b>{ticket.venue}</b></p>
-        <p>Asiento: <b>{ticket.seat}</b></p>
-        <p>Ticket (ID): <b>{ticket.ticketId}</b></p>
+
+      <div class="description">
+        <div class="top">
+          <div class="col1">
+            <h3>{ticket.eventName}</h3>
+            <p class="date">
+              {moment(new Date(ticket.eventStart * 1000)).format(
+                "DD / MM / yyyy"
+              )}
+            </p>
+          </div>
+          <div class="col2">
+            <img src="/marker.png" alt="marker" width="30" height="auto" />
+            <p>{ticket.venue}</p>
+          </div>
+        </div>
+        <div class="bottom">
+          <p>Evento ID<b>{ticket.eventId}</b></p>
+          <p>Asiento<b>{ticket.seat}</b></p>
+        </div>
       </div>
     </div>
 
-    <div class="col2">
-      <div class="mainInfo">
-        <h3>{ticket.eventName}</h3>
-        <p><b>{ticket.venue}</b></p>
-        <p>
-          <b>
-            {moment(new Date(ticket.eventStart * 1000)).format("DD/MM/yyyy")}
-          </b>
-        </p>
+    <div class="footer">
+      <div class="legal">
+        Este boleto solo permite la entrada al evento especificado. Válido sólo
+        para la fecha, hora y evento señalado que aparece en el presente boleto.
+        El titular debe portarlo durante su permanencia en el evento o recinto.
+        Ocupar la sección mencionada y mostrarlo al personal autorizado en caso
+        de ser requerido. Si el evento se realiza no habrá reembolso alguno por
+        boletos no utilizados, perdidos, robados, con rapsaduras o enmendaduras.
+        “Todos los eventos están sujetos a cargos por servicios adicional al
+        precio del boleto”
       </div>
-      <div class="content">
-        <p><b>Asiento: </b>{ticket.seat}</p>
+      <div class="qr">
+        <QrCode text={ticket.qrCode} width={244} colorLight="#81E985" />
+        <p class="">Ticket ID: <b>{ticket.ticketId}</b></p>
       </div>
-      <div class="flex flex-row">
-        <QrCode text={ticket.qrCode} />
-        <p class="legalText">
-          Este boleto solo permite la entrada al evento especificado, válido solo
-          para la fecha, hora y evento señalado que aparece en el presente boleto.
-          El titular debe portarlo durante su permanencia en el evento o recinto.
-          Ocupar la seccion mencionada y mostrarlo al personal autorizado en caso
-          del ser requerido. Si el evento se realiza no habrá reembolso alguno por
-          boletos no utilizados, perdidos o robados, con raspaduras o
-          enmendaduras. "Todos los eventos estan sujetos a cargos por servicio
-          adicional al precio del boleto"
-        </p>
+      <div class="logo">
+        <img src="/flash_icono_negro.png" alt="logo" width="40" height="auto" />
       </div>
-      
-
-      
     </div>
   </div>
 {/each}
 
 <style>
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
   :global(html, body) {
     font-family: sans-serif;
+    print-color-adjust: exact;
+    box-sizing: border-box;
+    font-family: "Source Sans Pro";
+    font-weight: 400;
+  }
+  .page {
+    display: flex;
+    flex-direction: column;
+    width: 210mm;
+    height: 297mm;
+    margin: auto;
   }
 
-  p {
+  .header {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #81e985;
+  }
+
+  .content {
+    background: #000;
+    height: 60%;
+    border-bottom: 5px dashed #81e985;
+  }
+
+  .content .banner {
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .content .banner img {
+    width: auto;
+    height: 100%;
+    margin: 0 auto;
+  }
+
+  .content .description {
+    padding: 40px;
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .content .top {
+    width: 100%;
+    display: flex;
+  }
+
+  .content .top .col1 {
+    width: 65%;
+    padding-right: 45px;
+  }
+  .content .top .col2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35%;
+  }
+
+  .content .top .col2 p {
+    padding-left: 10px;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .content .top h3 {
+    text-transform: uppercase;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+    color: #81e985;
+  }
+
+  .content .bottom {
+    color: #81e985;
+  }
+
+  .content .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 40px;
+  }
+
+  .content .bottom p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+    text-transform: uppercase;
+    padding: 15px;
+  }
+
+  .content .bottom p b {
+    margin-top: 10px;
+    background: #81e985;
+    color: #000;
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: uppercase;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    height: 40%;
+    width: 100%;
+    padding: 45px;
+  }
+
+  .footer .legal {
+    width: 65%;
+    padding-right: 45px;
+    text-align: justify;
+    font-size: 17px;
+    line-height: 1.5;
+    color: #606060;
+  }
+
+  .footer .qr {
+    width: 35%;
     margin: 0;
     padding: 0;
-    font-size: 10px;
   }
 
-  .wrapper {
-    display: flex;
-    width: 100%;
-  }
-
-  .col1 {
-    width: 25mm;
-    border-right: 1px solid #000;
-  }
-
-  .col1 .logoWrap {
-    display: block;
-    margin: auto;
-    width: 50px;
-    height: 50px;
-    padding: 3mm;
-  }
-
-  .col1 img {
+  .footer .qr p {
+    color: #000;
     margin-top: 10px;
-    margin-left: -23px;
-    transform: rotate(-90deg);
-  }
-
-  .col1 .content {
-    transform: rotate(-90deg);
     text-align: center;
-    /* padding-bottom: 10px;
-    padding-top: 10px; */
+    border-radius: 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1;
+    background: #81e985;
     text-transform: uppercase;
   }
-  .col1 .content p, .col1 .content p b {
-    font-size: 7px;
-  }
 
-  .col2 {
-    width: 75%;
-    height: 50%;
-    padding: 10px;
-    padding-bottom: 0;
+  .footer .logo {
+    width: 100%;
     text-align: center;
+    padding-top: 10px;
+  }
+  .footer .logo img {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .col2 .legalText {
-    /* padding-top: 5px; */
-    padding-left: 5px;
-    font-size: 7px;
-    text-align: left;
-  }
-
-  .col2 h3 {
+  @page {
+    /* size: A4 portrait; */
+    size: A4 portrait;
     margin: 0;
-    margin-bottom: 2px;
+    padding: 0;
+    print-color-adjust: exact;
   }
 
-  .col2 .mainInfo p {
-    font-size: 8px;
-    text-transform: uppercase;
-  }
-  .col2 .mainInfo h3 {
-    font-size: 8px;
-    text-transform: uppercase;
+  :global(.avoidInnerBreak) {
+    page-break-inside: avoid;
   }
 
-  .col2 .content, .col2 .content p, .col2 .content p b {
-    font-size: 8px;
-    /* padding-top: 10px;
-    padding-bottom: 10px; */
-  }
-
-  @media screen {
-    :global(.forPrint) {
-      display: none;
-    }
-    .forScreen {
-      display: block;
-    }
-  }
-
-  @media print {
-    @page {
-      /* size: A5 landscape; */
-      size: 140mm 50mm;
-      margin: 5mm 5mm 5mm 5mm;
-      print-color-adjust: exact;
-    }
-
-    :global(.avoidInnerBreak) {
-      page-break-inside: avoid;
-    }
-
-    :global(.alwaysAfterBreak) {
-      page-break-after: always;
-    }
-    :global(.forPrint) {
-      display: block;
-    }
-    .forScreen {
-      display: none;
-    }
+  :global(.alwaysAfterBreak) {
+    page-break-after: always;
   }
 </style>
