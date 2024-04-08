@@ -3,12 +3,14 @@
   import "@fontsource/source-sans-pro/700.css";
   import QrCode from "../../../../../components/QrCode.svelte";
   import moment from "moment";
+    import { getSeatMap } from "$lib/client-util";
   export let data;
   const { tickets, bookingId, event } = data;
   console.log(data);
 </script>
 
 {#each tickets || [] as ticket, i}
+  {@const mappedSeat = getSeatMap(ticket.seat)}
   <div class="page avoidInnerBreak">
     <div class="header">
       <img
@@ -21,7 +23,7 @@
 
     <div class="content">
       <div class="banner">
-        <img src="/passkit/15857/background.png" alt="banner" />
+        <img src={`/passkit/${ticket.eventId}/background.png`} alt="banner" />
       </div>
 
       <div class="description">
@@ -40,8 +42,15 @@
           </div>
         </div>
         <div class="bottom">
-          <p>Evento ID<b>{ticket.eventId}</b></p>
-          <p>Asiento<b>{ticket.seat}</b></p>
+          {#if mappedSeat.seat}
+            <p>Asiento<b>{mappedSeat.seat}</b></p>
+          {/if}
+          {#if mappedSeat.section}
+            <p>Sección<b>{mappedSeat.section}</b></p>
+          {/if}
+          {#if mappedSeat.seatType}
+            <p>Zona<b>{mappedSeat.seatType}</b></p>
+          {/if}
         </div>
       </div>
     </div>

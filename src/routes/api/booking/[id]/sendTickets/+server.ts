@@ -41,6 +41,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
                 disposition: "attachment"
             }
         }));
+        console.log('EMAIL_FROM', EMAIL_FROM);
         const res = await sendEmail(`Flash Ticket <${EMAIL_FROM}>`, booking.customer.email, 'Tickets', undefined, SENDGRID_TEMPLATE_ID, data, [{
             content: await base64FilePromise,
             filename: "tickets.pdf",
@@ -48,6 +49,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
             disposition: "attachment" },
             ...passkitFiles
         ]);
+        console.log('sendEmail', res);
         return new Response(JSON.stringify({ code: 0, message: 'ok'}), {
             headers: {
                 'content-type': 'application/json',
@@ -55,6 +57,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
             }
         });
     } catch (e) {
+        console.log('error', e);
         return new Response(JSON.stringify({ error: e.message }), {
             headers: {
                 'content-type': 'application/json',

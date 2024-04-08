@@ -3,6 +3,7 @@
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
 ## Creating a project
+
 If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
@@ -39,3 +40,7 @@ You can preview the production build with `npm run preview`.
 # Notes:
 el_sendmail_by_booking_id is responsible for email sending
 see what el_sendmail_each_customer does...
+
+
+Seems like this drives the hook to send email:
+add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'trigger' ), 10, 2 ); 
