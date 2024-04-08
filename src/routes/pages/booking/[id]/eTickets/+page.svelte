@@ -23,7 +23,7 @@
 
     <div class="content">
       <div class="banner">
-        <img src={`/passkit/${ticket.eventId}/background.png`} alt="banner" />
+        <img src={`/eTickets/${ticket.eventId}/background.jpg`} alt="banner" />
       </div>
 
       <div class="description">
@@ -38,7 +38,7 @@
           </div>
           <div class="col2">
             <img src="/marker.png" alt="marker" width="30" height="auto" />
-            <p>{ticket.venue}</p>
+            <p>{ticket.venue || ''} <span class="smallText">{ticket.address || ''}</span></p>
           </div>
         </div>
         <div class="bottom">
@@ -114,7 +114,7 @@
   }
 
   .content .banner {
-    height: 200px;
+    height: 400px;
     overflow: hidden;
   }
 
@@ -145,7 +145,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 35%;
+    width: 70%;
   }
 
   .content .top .col2 p {
@@ -244,6 +244,9 @@
     padding: 0;
     margin-left: auto;
     margin-right: auto;
+  }
+  .smallText {
+    font-size: 12px;
   }
 
   @page {
