@@ -42,6 +42,7 @@
           </div>
         </div>
         <div class="bottom">
+          <p>ID reserva<b>{ticket.bookingId}</b></p>
           {#if mappedSeat.seat}
             <p>Asiento<b>{mappedSeat.seat}</b></p>
           {/if}
@@ -114,7 +115,7 @@
   }
 
   .content .banner {
-    height: 400px;
+    height: 320px;
     overflow: hidden;
   }
 
