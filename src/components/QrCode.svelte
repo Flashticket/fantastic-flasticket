@@ -2,16 +2,20 @@
     import { onMount } from 'svelte';
     import QRCode from 'qrcode';
   
-    export let text;
+    export let text = '';
+    export let width = 80;
+    export let margin = 2;
+    export let colorLight = '#ffffff';
+    export let colorDark = '#000000';
     let canvas;
   
     onMount(async () => {
       await QRCode.toCanvas(canvas, text, {
-        width: 80,
-        margin: 2,
+        width: width,
+        margin: margin,
         color: {
-          dark: '#000000',
-          light: '#ffffff'
+          dark: colorDark,
+          light: colorLight
         }
       });
     });
