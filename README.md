@@ -43,4 +43,4 @@ see what el_sendmail_each_customer does...
 
 
 Seems like this drives the hook to send email:
-add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'trigger' ), 10, 2 ); 
+add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
