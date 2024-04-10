@@ -122,7 +122,7 @@ export const GET = async (request) => {
 // 		return new Response(err.message, { status: 500 });
 // 	}
 
-const booking = await getBooking(16852);
+const booking = await getBooking(17294);
 if (!booking.tickets || !booking.tickets.length) {
 	throw new Error('No tickets found');
 }
