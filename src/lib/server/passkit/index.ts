@@ -67,7 +67,8 @@ export const generatePass = async (baseUrl: string, ticket: Ticket) => {
 				"organizationName" : "Flash Ticket",
 				"description" : ticket.eventName,
 				"foregroundColor" : "rgb(255, 255, 255)",
-				"labelColor" : "rgb(255, 255, 255)",
+				// put #81e985 in rgb
+				"labelColor" : "rgb(129, 233, 133)",
 				"backgroundColor" : "rgb(100, 65, 76)",
 				
 			}
