@@ -126,7 +126,7 @@ const booking = await getBooking(17294);
 if (!booking.tickets || !booking.tickets.length) {
 	throw new Error('No tickets found');
 }
-const ticket = booking.tickets[0];
+const ticket = booking.tickets[1];
 const baseUrl = new URL(request.url).origin;
 const buffer = await generatePass(baseUrl, ticket);
 return new Response(buffer, {

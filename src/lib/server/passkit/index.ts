@@ -4,6 +4,7 @@ import moment from "moment";
 
 const { PKPass } = pk.default;
 import { WWDR, EVENT_CERT_KEY, EVENT_CERT, EVENT_CERT_KEY_PASSPHRASE, TEAM_IDENTIFIER } from '$env/static/private' 
+import { getSeatMap } from "$lib/client-util";
 const fetchBuffer = async (baseUrl: string, eventId: number, resource: string) => {
     const url = `${baseUrl}/passkit/${eventId}/${resource}`;
     console.log('fetchBuffer', url);
@@ -73,47 +74,70 @@ export const generatePass = async (baseUrl: string, ticket: Ticket) => {
 ,
 		);
 		console.log('Pass generated');
-		
-	
 	
 		// Adding some settings to be written inside pass.json
 		// pass.localize("en", { ... });
+		const mappedSeat = getSeatMap(ticket.seat)
 		pass.type = "eventTicket";
 		pass.primaryFields.push(
 				{
 				"key" : "event",
-				"label" : "EVENT",
+				"label" : "EVENTO",
 				"value" : ticket.eventName
 				}
-			);
+		);
 		pass.secondaryFields.push(
-				  {
-					"key" : "loc",
-					"label" : "LUGAR",
-					"value" : ticket.address
-				  }
+			{
+			"key" : "date",
+			"label" : "FECHA",
+			"value" : moment(eventDate).format('DD/MM/YYYY hh:mm A')
+			}
 		);
-		pass.auxiliaryFields.push(
-				  {
-					"key" : "date",
-					"label" : "FECHA",
-					"value" : moment(eventDate).format('DD/MM/YYYY')
-				  }
+		pass.secondaryFields.push(
+			{
+			"key" : "loc",
+			"label" : "LUGAR",
+			"value" : ticket.address
+			}
 		);
 		pass.auxiliaryFields.push(
 			{
-			  "key" : "time",
-			  "label" : "HORA",
-			  "value" : moment(eventDate).format('hh:mm A')
+			"key" : "bookingId",
+			"label" : "#",
+			"value" : ticket.bookingId
 			}
-        );
-        pass.auxiliaryFields.push(
-			{
-			  "key" : "seat",
-			  "label" : "ASIENTO",
-			  "value" : ticket.seat
-			}
-        );
+		);
+		
+        //   {#if mappedSeat.seatType}
+        //     <p>Zona<b>{mappedSeat.seatType}</b></p>
+        //   {/if}
+		if (mappedSeat.seat) {
+			pass.auxiliaryFields.push(
+				{
+				"key" : "seat",
+				"label" : "ASIENTO",
+				"value" : mappedSeat.seat
+				}
+			);
+		}
+		if (mappedSeat.seatType) {
+			pass.auxiliaryFields.push(
+				{
+				"key" : "seatType",
+				"label" : "ZONA",
+				"value" : mappedSeat.seatType
+				}
+			);
+		}
+		if (mappedSeat.section) {
+			pass.auxiliaryFields.push(
+				{
+				"key" : "section",
+				"label" : "SECCIÓN",
+				"value" : mappedSeat.section
+				}
+			);
+		}
 			  
 		// pass.transitType = "PKTransitTypeAir";
 		pass.setBarcodes(ticket.qrCode); // Random value
