@@ -44,3 +44,12 @@ see what el_sendmail_each_customer does...
 
 Seems like this drives the hook to send email:
 add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
+
+# Hologram in the ticket:
+x: 2650 --> 8.65cm
+y: 125 --> 1.14cm
+
+780x460
+
+4287pix/14cm
+1530pix 5cm
