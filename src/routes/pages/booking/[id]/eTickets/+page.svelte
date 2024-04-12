@@ -3,7 +3,7 @@
   import "@fontsource/source-sans-pro/700.css";
   import QrCode from "../../../../../components/QrCode.svelte";
   import moment from "moment";
-    import { getSeatMap } from "$lib/client-util";
+  import { getSeatMap } from "$lib/client-util";
   export let data;
   const { tickets, bookingId, event } = data;
   console.log(data);
@@ -38,7 +38,10 @@
           </div>
           <div class="col2">
             <img src="/marker.png" alt="marker" width="30" height="auto" />
-            <p>{ticket.venue || ''} <span class="smallText">{ticket.address || ''}</span></p>
+            <p>
+              {ticket.venue || ""}
+              <span class="smallText">{ticket.address || ""}</span>
+            </p>
           </div>
         </div>
         <div class="bottom">
