@@ -140,7 +140,7 @@
     width: 65mm;
     height: 50mm;
     padding: 3mm;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .col2Wrap .right {
@@ -168,10 +168,6 @@
     padding-right: 3px;
   }
 
-  .col2 .address {
-    padding-top: 2mm;
-  }
-
   .col2 .address .smallText {
     display: block;
     font-size: 10px;
@@ -185,12 +181,12 @@
     text-transform: uppercase;
     font-weight: 700;
     line-height: 1;
-    font-size: 20px;
+    font-size: 19px;
     margin-bottom: 2mm;
   }
 
   .col2 .mainInfo .eventImage {
-    width: 48mm;
+    width: 40mm;
     height: auto;
     margin-bottom: 2mm;
   }
