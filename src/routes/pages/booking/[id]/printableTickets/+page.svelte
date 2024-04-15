@@ -149,12 +149,12 @@
     align-items: flex-end;
     align-self: flex-end;
     width: 35mm;
-    padding-bottom: 3mm;
+    padding-bottom: 2mm;
     padding-right: 2mm;
   }
 
   .col2 .seatInfo {
-    padding-top: 3mm;
+    padding-top: 2mm;
     display: flex;
     flex-wrap: wrap;
   }
