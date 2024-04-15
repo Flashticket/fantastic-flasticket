@@ -24,7 +24,7 @@
         <div class="left">
           <div class="mainInfo">
             <!-- <h3>{ticket.eventName}</h3> -->
-            <img class="eventImage" src="/logo_moenia.jpg" alt="event" />
+            <img class="eventImage" src={`/printableTickets/${ticket.eventId}/logo.jpg`} alt="event" />
             <p>
               <b>
                 {moment(new Date(ticket.eventStart * 1000)).format(
