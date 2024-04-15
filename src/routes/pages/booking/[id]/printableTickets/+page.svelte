@@ -23,17 +23,18 @@
       <div class="col2Wrap">
         <div class="left">
           <div class="mainInfo">
-            <h3>{ticket.eventName}</h3>
+            <!-- <h3>{ticket.eventName}</h3> -->
+            <img class="eventImage" src="/logo_moenia.jpg" alt="event" />
             <p>
-              <b
-                >{moment(new Date(ticket.eventStart * 1000)).format(
+              <b>
+                {moment(new Date(ticket.eventStart * 1000)).format(
                   "DD/MM/yyyy"
-                )}</b
-              >
+                )}
+              </b>
             </p>
             <p class="address">
               {ticket.venue}
-              <span class="smallText"><i>{ticket.address || ""}</i></span>
+              <span class="smallText">{ticket.address || ""}</span>
             </p>
           </div>
 
@@ -126,10 +127,6 @@
     height: 50mm;
   }
 
-  .col2 p {
-    font-size: 14px;
-  }
-
   .col2Wrap {
     display: flex;
   }
@@ -143,6 +140,7 @@
     width: 65mm;
     height: 50mm;
     padding: 3mm;
+    font-size: 14px;
   }
 
   .col2Wrap .right {
@@ -179,12 +177,22 @@
     font-size: 10px;
   }
 
+  .col2 .mainInfo {
+    width: 100%;
+  }
+
   .col2 .mainInfo h3 {
     text-transform: uppercase;
     font-weight: 700;
     line-height: 1;
     font-size: 20px;
-    margin-bottom: 3mm;
+    margin-bottom: 2mm;
+  }
+
+  .col2 .mainInfo .eventImage {
+    width: 48mm;
+    height: auto;
+    margin-bottom: 2mm;
   }
 
   .col3 {
