@@ -32,7 +32,7 @@
             <h3>{ticket.eventName}</h3>
             <p class="date">
               {moment(new Date(ticket.eventStart * 1000)).format(
-                "DD / MM / yyyy"
+                "DD / MM / yyyy HH:mm"
               )}
             </p>
           </div>
