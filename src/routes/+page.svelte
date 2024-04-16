@@ -74,6 +74,8 @@
       const resData = await res.json();
       if (!resData.bookingId) {
         alert("Error creating tickets");
+        busy = false;
+        return;
       }
       document.location.href = `/pages/booking/${resData.bookingId}/printableTickets`;
       // tickets = resData.tickets;
