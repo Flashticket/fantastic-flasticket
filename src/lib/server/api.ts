@@ -223,7 +223,11 @@ export const createTicket = async (ticket: Ticket) => {
     const results = await runQuery(insertQueries);
     return results;
 }
-
+const getMeta = (meta: any[], key: string) => {
+    const metaObj = meta.find((m: any) => m.meta_key === key);
+    console.log('metaObj', metaObj);
+    return metaObj ? metaObj.meta_value : null;
+}
 export const getBooking = async (bookingId: number) => {
     // const booking = await getPost(bookingId);
     const bookingMeta = await getFullPostMeta(bookingId);
