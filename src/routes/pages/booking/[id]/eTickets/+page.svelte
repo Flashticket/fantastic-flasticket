@@ -38,10 +38,12 @@
           </div>
           <div class="col2">
             <img src="/marker.png" alt="marker" width="30" height="auto" />
-            <p>
-              {ticket.venue || ""}
-              <span class="smallText">{ticket.address || ""}</span>
-            </p>
+            <div>
+              <p class="venue">
+                {ticket.venue || ""}
+              </p>
+              <p class="smallText">{ticket.address || ""}</p>
+            </div>
           </div>
         </div>
         <div class="bottom">
@@ -95,15 +97,13 @@
     font-weight: 400;
   }
   .page {
-    display: flex;
-    flex-direction: column;
     width: 210mm;
     height: 297mm;
     margin: auto;
   }
 
   .header {
-    height: 10%;
+    height: 30mm;
     width: 100%;
     display: flex;
     align-items: center;
@@ -113,7 +113,7 @@
 
   .content {
     background: #000;
-    height: 60%;
+    height: 157mm;
     border-bottom: 5px dashed #81e985;
   }
 
@@ -129,8 +129,8 @@
   }
 
   .content .description {
-    padding: 40px;
-    font-size: 25px;
+    padding: 30px 40px;
+    font-size: 20px;
     font-weight: 400;
     line-height: 1;
     color: #fff;
@@ -147,15 +147,27 @@
   }
   .content .top .col2 {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 70%;
   }
 
-  .content .top .col2 p {
+  .content .top .col2 img {
+    margin-top: 3px;
+  }
+
+  .content .top .col2 div {
     padding-left: 10px;
+  }
+
+  .content .top .col2 p.venue {
     text-transform: uppercase;
-    line-height: 1.1;
+    line-height: 1;
+    font-size: 20px;
+    padding-bottom: 5px;
+  }
+
+  .content .top .col2 p.smallText {
+    line-height: 1;
   }
 
   .content .top h3 {
@@ -163,7 +175,7 @@
     font-size: 30px;
     font-weight: 700;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     color: #81e985;
   }
 
@@ -174,7 +186,7 @@
   .content .bottom {
     display: flex;
     flex-wrap: wrap;
-    padding-top: 40px;
+    padding-top: 20px;
   }
 
   .content .bottom p {
@@ -183,17 +195,17 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     text-transform: uppercase;
     padding: 15px;
   }
 
   .content .bottom p b {
-    margin-top: 10px;
+    margin-top: 5px;
     background: #81e985;
     color: #000;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 18px;
     text-transform: uppercase;
     padding: 10px;
     border-radius: 10px;
@@ -202,7 +214,7 @@
   .footer {
     display: flex;
     flex-wrap: wrap;
-    height: 40%;
+    height: 100mm;
     width: 100%;
     padding: 45px;
   }
