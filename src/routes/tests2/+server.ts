@@ -2,6 +2,7 @@ import * as pk from "passkit-generator";
 // import fs from "fs";
 import { getBooking } from "$lib/server/api.js";
 import { generatePass } from "$lib/server/passkit/index.js";
+//@ts-ignore
 const { PKPass } = pk.default;
 
 // const fetchBuffer = async (resource: string) => {
@@ -138,7 +139,7 @@ return new Response(buffer, {
 
 	} catch (err) {
 		console.error(err);
-		return new Response(err.message, { status: 500 });
+		return new Response((err as any).message, { status: 500 });
 	}
 
 

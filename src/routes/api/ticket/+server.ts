@@ -9,7 +9,7 @@ const parseJson = async (buffer: ArrayBuffer) => {
 const parsedData = (requestEvent: any) => {
     console.log('requestEvent:', requestEvent);
     if (!requestEvent.body) return new Promise<object>(resolve => resolve({}));
-    return requestEvent.arrayBuffer().then(buffer => {
+    return requestEvent.arrayBuffer().then((buffer: Buffer) => {
         return parseJson(buffer).catch(ex => {
             console.log('Error parsing json:', ex);
         });

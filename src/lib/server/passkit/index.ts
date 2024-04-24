@@ -1,7 +1,7 @@
 import type { Ticket } from "$lib/types";
 import * as pk from "passkit-generator";
 import moment from "moment";
-
+//@ts-ignore
 const { PKPass } = pk.default;
 import { WWDR, EVENT_CERT_KEY, EVENT_CERT, EVENT_CERT_KEY_PASSPHRASE, TEAM_IDENTIFIER } from '$env/static/private' 
 import { getSeatMap } from "$lib/client-util";
@@ -150,6 +150,6 @@ export const generatePass = async (baseUrl: string, ticket: Ticket) => {
 		return buffer;
 	} catch (err) {
 		console.error(err);
-		return new Response(err.message, { status: 500 });
+		return new Response((err as any).message, { status: 500 });
 	}
 }
