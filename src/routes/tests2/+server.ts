@@ -6,7 +6,7 @@ import { generatePass } from "$lib/server/passkit/index.js";
 const { PKPass } = pk.default;
 
 // const fetchBuffer = async (resource: string) => {
-// 	const res = await fetch(`http://localhost:5173/passkit/123456/${resource}`);
+// 	const res = await fetch(`http://localhost:5173/events/123456/passkit/${resource}`);
 // 	const data = await res.arrayBuffer();
 // 	return Buffer.from(data);
 // }

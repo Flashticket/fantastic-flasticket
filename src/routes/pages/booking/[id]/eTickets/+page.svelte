@@ -23,7 +23,7 @@
 
     <div class="content">
       <div class="banner">
-        <img src={`/eTickets/${ticket.eventId}/background.jpg`} alt="banner" />
+        <img src={`/events/${ticket.eventId}/eTickets/background.jpg`} alt="banner" />
       </div>
 
       <div class="description">
