@@ -6,7 +6,7 @@ const { PKPass } = pk.default;
 import { WWDR, EVENT_CERT_KEY, EVENT_CERT, EVENT_CERT_KEY_PASSPHRASE, TEAM_IDENTIFIER } from '$env/static/private' 
 import { getSeatMap } from "$lib/client-util";
 const fetchBuffer = async (baseUrl: string, eventId: number, resource: string) => {
-    const url = `${baseUrl}/passkit/${eventId}/${resource}`;
+    const url = `${baseUrl}/events/${eventId}/passkit/${resource}`;
     console.log('fetchBuffer', url);
 	const res = await fetch(url);
 	const data = await res.arrayBuffer();
