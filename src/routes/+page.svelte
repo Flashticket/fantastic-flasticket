@@ -83,14 +83,26 @@
       // console.log(tickets);
     } catch (error) {
       console.log(error);
+      busy = false;
     }
-    busy = false;
+    
   };
 </script>
 
 <div class="forScreen">
+  {#if !data.seats || data.seats.length === 0}
+    <h1>No hay asientos que comprar</h1>
+  {:else}
+    <h1>Asientos a comprar</h1>
+    <ul>
+      {#each data.seats as seat}
+        <li>{seat?.seat}</li>
+      {/each}
+    </ul>
+    Precio: {data.price?.totalBeforeTax || 0}, IVA {data.price?.tax || 0}. Total {data.price?.totalPrice || 0} MXN
+  {/if}
   {#if busy}
-    <p>Creating tickets...</p>
+    <h1>Creating tickets...</h1>
   {:else}
   <div class="container m-20">
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -217,6 +229,7 @@
     }
     .forScreen {
       display: block;
+      margin: 20px;
     }
   }
 
