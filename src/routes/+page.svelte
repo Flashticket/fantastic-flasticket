@@ -57,6 +57,7 @@
 //     },
 //   ];
   let tickets: Ticket[] = [];
+  let email = '';
   let bookingId = 0;
   console.log(data);
   let busy = false;
@@ -69,11 +70,11 @@
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, email }),
       });
       const resData = await res.json();
       if (!resData.bookingId) {
-        alert("Error creating tickets");
+        alert("Error creando tickets");
         busy = false;
         return;
       }
@@ -91,7 +92,7 @@
 
 <div class="forScreen">
   {#if busy}
-    <h1>Creating tickets...</h1>
+    <h1>Creando tickets...</h1>
   {:else}
   {#if !data.seats || data.seats.length === 0}
     <h1>No hay asientos que comprar</h1>
@@ -103,6 +104,9 @@
       {/each}
     </ul>
     Precio: {data.price?.totalBeforeTax || 0}, IVA {data.price?.tax || 0}. Total {data.price?.totalPrice || 0} MXN
+    <div class="container m-20 flex flex-row m-3">
+      <div class="p-3">Correo electrónico (opcional)</div> <input type="email" bind:value={email} placeholder="Correo electrónico" class="p-3 w-[200px]"/>
+    </div>
     <div class="container m-20">
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         on:click={createTickets}>Crear tickets</button>

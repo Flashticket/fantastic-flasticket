@@ -67,15 +67,15 @@ export const getSeatBook = (seats: SeatType[]) => {
         return `i:${ticketId};a:${groupedSeats[ticketId].length}:{${groupedSeats[ticketId].map((s: SeatType, i: number) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
     })}}`;
 }
-export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[], price: PriceType) => {
+export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[], price: PriceType, email?: string) => {
     console.log('seats:', seats);
     // const seatBook = 'a:3:{i:0;s:23:"VERDE-SECC-GEN-DER-ASTO";i:1;s:30:"PLATINUM_ROJO-SECC-B1-ASTO-X44";i:2;s:30:"ORO_AMARILLO-SECC-C1-ASTO-FF45";}';
     const seatBook = getSeatBook(seats);
     console.log('seatBook:', seatBook);
     // const seatQuantity = 'a:3:{s:23:"VERDE-SECC-GEN-DER-ASTO";i:4;s:30:"PLATINUM_ROJO-SECC-B1-ASTO-X44";i:1;s:30:"ORO_AMARILLO-SECC-C1-ASTO-FF45";i:1;}';
     const seatQuantity = `a:${seats.length}:{${seats.map((s, i) => `s:${s.seat.length}:"${s.seat}";i:${s.amount}`).join(';')};}`;
-    // const listIdTicket = ["VERDE-SECC-GEN-DER-ASTO","PLATINUM_ROJO-SECC-B1-ASTO-X44","ORO_AMARILLO-SECC-C1-ASTO-FF45"];
-    const listIdTicket = `a:${seats.length}:{${seats.map((s, i) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
+    // const listIdTicket = `a:${seats.length}:{${seats.map((s, i) => `i:${i};s:${s.seat.length}:"${s.seat}"`).join(';')};}`;
+    const listIdTicket = JSON.stringify(seats.map((s, i) => s.seat));
     console.log('seatBook:', seatBook);
     console.log('seatQuantity:', seatQuantity);
     console.log('listIdTicket:', listIdTicket);
@@ -88,7 +88,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
     const customer = {
         name: 'Taquilla',
         phone: '123',
-        email: 'andoni.arostegui@stacknvault.com',
+        email: email || 'andoni.arostegui@stacknvault.com',
         address: 'Internal address',
     };
     const venue = 'Teatro Metropolitano';

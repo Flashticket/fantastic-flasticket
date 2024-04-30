@@ -1,6 +1,5 @@
 import { bookSeats } from "$lib/server/api";
 import { authenticate } from "$lib/server/util";
-import type { RequestEvent } from "@sveltejs/kit"
 const parseJson = async (buffer: ArrayBuffer) => {
     const data = Buffer.from(buffer).toString('utf8');
     // console.log('parsing json...', data);
@@ -23,7 +22,7 @@ export const POST = async (requestEvent) => {
     }
     const body = await parsedData(request);
     console.log('body:', body);
-    const { seats, eventId, idCal, price } = body;
+    const { seats, eventId, idCal, price, email } = body;
     if (!seats || seats.length === 0) {
         return new Response(JSON.stringify({ error: 'No seats'}), {
             headers: {
@@ -31,7 +30,7 @@ export const POST = async (requestEvent) => {
             }
         });
     }
-    const results = await bookSeats(eventId, idCal, seats, price);
+    const results = await bookSeats(eventId, idCal, seats, price, email);
     return new Response(JSON.stringify(results), {
         headers: {
             'content-type': 'application/json'
