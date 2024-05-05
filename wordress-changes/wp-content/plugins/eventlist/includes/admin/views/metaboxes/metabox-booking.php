@@ -20,9 +20,13 @@ $transaction_id = get_post_meta( $id_booking, OVA_METABOX_EVENT.'transaction_id'
 
 ?>
 <script>
-    function printTicket(id) {
+    function printTickets(id) {
         const url = document.location.href.startsWith('https://flashticket.com.mx/') ? 'https://app.flashticket.com.mx/' : 'https://app.boletera.dev-mt.com/';
         window.open(url + '/pages/booking/'+ id +'/printableTickets', '_blank');
+    }
+    function printETickets(id) {
+        const url = document.location.href.startsWith('https://flashticket.com.mx/') ? 'https://app.flashticket.com.mx/' : 'https://app.boletera.dev-mt.com/';
+        window.open(url + '/pages/booking/'+ id +'/eTickets', '_blank');
     }
 </script>
 <div class="el_booking_detail">
@@ -637,9 +641,13 @@ $transaction_id = get_post_meta( $id_booking, OVA_METABOX_EVENT.'transaction_id'
 					<?php esc_html_e( "Send Invoice", "eventlist" ); ?>
 				</button>
 			<?php endif; ?>
-            <a href="javascript:printTicket('<?php echo esc_attr( $post->ID ); ?>')">
-				Imprimr Ticket en Taquilla
-			</button>
+            <br/>
+            <a style="margin: 5px" href="javascript:printTickets('<?php echo esc_attr( $post->ID ); ?>')">
+				Imprimir Tickets en Taquilla
+            </a>
+            <a style="margin: 5px" href="javascript:printETickets('<?php echo esc_attr( $post->ID ); ?>')">
+				Imprimir eTickets
+            </a>
 			<div class="mb-loading">
 	            <i class="dashicons-before dashicons-update-alt"></i>
 	        </div>
