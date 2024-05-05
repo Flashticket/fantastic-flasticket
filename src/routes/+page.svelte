@@ -100,7 +100,7 @@
     <h1>Asientos a comprar</h1>
     <ul>
       {#each data.seats as seat}
-        <li>{seat?.seat}</li>
+        <li>{seat?.seat} ({seat?.amount} x ${seat.price}MXN = ${seat?.amount * seat?.price}MXN)</li>
       {/each}
     </ul>
     Precio: {data.price?.totalBeforeTax || 0}, IVA {data.price?.tax || 0}. Total {data.price?.totalPrice || 0} MXN
