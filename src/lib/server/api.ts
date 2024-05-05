@@ -36,7 +36,7 @@ export const runQuery = async (query: string) => {
 
 export const getPost = async (postId: number) => {
     const post = await runQuery(`SELECT * FROM wp_sya2cn_posts WHERE ID = ${postId}`);
-    return post[0];
+    return post.length > 0 ? post[0] : null;
 }
 
 export const getPostMeta = async (postId: number, metaKey: string) => {
@@ -45,6 +45,10 @@ export const getPostMeta = async (postId: number, metaKey: string) => {
 }
 export const getFullPostMeta = async (postId: number) => {
     return await runQuery(`SELECT * FROM wp_sya2cn_postmeta WHERE post_id = ${postId}`);
+}
+export const getMetaByKeyAndValue = async (metaKey: string, metaValue: string) => {
+    const result = await runQuery(`SELECT * FROM wp_sya2cn_postmeta WHERE meta_key = '${metaKey}' AND meta_value = '${metaValue}'`);
+    return result.length > 0 ? result[0] : null;
 }
 // group array of objects by a property of the objects
 export const groupBy = (array: any[], key: string) => {
@@ -80,6 +84,13 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
     console.log('seatQuantity:', seatQuantity);
     console.log('listIdTicket:', listIdTicket);
     console.log('eventId:', eventId);
+    // Make sure the seats aren't booked already, at least the non general ones
+    for (const seat of seats.filter(s => s.type !== 'area')) {
+        const seatMeta = await getMetaByKeyAndValue('ova_mb_event_seat', seat.seat);
+        if (seatMeta) {
+            throw new Error(`El asiento ${seat.seat} ya se ha reservado.`);
+        }
+    }
     // return;
     const event = await getPost(eventId);
     const eventStart = await getPostMeta(eventId, 'ova_mb_event_start_date_str');
@@ -180,6 +191,28 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
             console.log(`ticket created for seat ${seat}`);
         }
     }
+//     !!! create cart
+//     Generate cart object
+
+// a:7:{
+// i:0;
+//     a:3:{s:2:"id";s:22:"ROSA-SECC-GEN-IZQ-ASTO";s:5:"price";d:100;s:3:"qty";s:1:"2";} (area)
+// i:1;
+//     a:3:{s:2:"id";s:23:"VERDE-SECC-GEN-DER-ASTO";s:5:"price";d:100;s:3:"qty";s:1:"3";}
+// i:2;
+//     a:3:{s:2:"id";s:23:"CAFE-SECC-GEN-CENT-ASTO";s:5:"price";d:200;s:3:"qty";s:1:"5";}
+// i:3;
+//     a:2:{s:2:"id";s:30:"PLATINUM_ROJO-SECC-B2-ASTO-Z39";s:5:"price";d:1000;} (map)
+// i:4;
+//     a:2:{s:2:"id";s:31:"PLATINUM_ROJO-SECC-B2-ASTO-AA39";s:5:"price";d:1000;}
+// i:5;
+//     a:2:{s:2:"id";s:25:"VIP_AZUL-SECC-A2-ASTO-N36";s:5:"price";d:100;}
+// i:6;
+//     a:2:{s:2:"id";s:25:"VIP_AZUL-SECC-A2-ASTO-M35";s:5:"price";d:100;}
+// }
+
+
+
 
     // 'a:6:{i:0;i:16502;i:1;i:16504;i:2;i:16506;i:3;i:16508;i:4;i:16510;i:5;i:16512;}';
     const ticketIdsStr = tickets.map((r: Ticket, index) => `i: ${index};i:${r.ticketId}`).join(';');

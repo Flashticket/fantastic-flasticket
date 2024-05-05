@@ -74,7 +74,7 @@
       });
       const resData = await res.json();
       if (!resData.bookingId) {
-        alert("Error creando tickets");
+        alert(`Error creando tickets${resData.message ? `: ${resData.message}` : ''}`);
         busy = false;
         return;
       }
