@@ -1,12 +1,23 @@
 import { v4 as uuidv4 } from 'uuid';
-import mysql from 'mysql';
+import mysql from 'mysql2/promise';
+
 
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
 import type { Booking, PriceType, SeatType, Ticket, TicketMapType } from '$lib/types';
 
+const pool = mysql.createPool({
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 3,
+    queueLimit: 0,
+  });
+
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
-    let connection: mysql.Connection | null = null;
+    let connection: mysql.PoolConnection | null = null;
     try {
         console.log('running query:', query)
         const connData = {
@@ -16,31 +27,24 @@ export const runQuery = async (query: string) => {
             database: DB_NAME,
         };
         console.log('connData:', connData);
-        connection = mysql.createConnection(connData);
+        connection = await pool.getConnection();
         if (!connection) {
             throw new Error('No connection');
         }
         // run the query and get the results
-        let results = await new Promise((resolve, reject) => {
-            connection?.query({
-                sql: query,
-                timeout: 40000,
-                values: []
-            }, (error, results, fields) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(results as any);
-            });
+        let results = await connection?.query({
+            sql: query,
+            timeout: 40000,
+            values: []
         });
         // close the connection
-        console.log(results);
-        return results as any;
+        console.log('results', results);
+        return results[0] as (any & { insertId?: number  }) | any[];
     } catch (ex) {
         console.log('Error:', ex);
         throw ex;
     } finally {
-        connection?.end();
+        connection?.release();
     }
 };
 
@@ -124,6 +128,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
     const booking = await runQuery(query);
     if (!booking) throw new Error('No booking');
     const bookingId = booking.insertId;
+    console.log('==========> bookingId:', bookingId);
 
     // a:3:{i:0;s:23:"CAFE-SECC-GEN-CENT-ASTO";i:1;s:23:"VERDE-SECC-GEN-DER-ASTO";i:2;s:22:"ROSA-SECC-GEN-IZQ-ASTO";}
     const areaSeats = seats.filter(s => s.type === 'area').map(s => s.seat);
@@ -178,6 +183,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
             `;
             const postResult = await runQuery(postQuery);
             const ticketId = postResult.insertId;
+            console.log('==========> ticketId:', ticketId);
             if (!ticketId) {
                 throw new Error('No ticketId');
             }
