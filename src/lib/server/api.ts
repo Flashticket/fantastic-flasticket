@@ -6,32 +6,42 @@ import type { Booking, PriceType, SeatType, Ticket, TicketMapType } from '$lib/t
 
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
-    console.log('running query:', query)
-    const connData = {
-        host: DB_HOST,
-        user: DB_USER,
-        password: DB_PASSWORD,
-        database: DB_NAME,
-    };
-    console.log('connData:', connData);
-    const connection = mysql.createConnection(connData);
-    // run the query and get the results
-    let results = await new Promise((resolve, reject) => {
-        connection.query({
-            sql: query,
-            timeout: 40000,
-            values: []
-        }, (error, results, fields) => {
-            if (error) {
-                reject(error);
-            }
-            resolve(results as any);
+    let connection: mysql.Connection | null = null;
+    try {
+        console.log('running query:', query)
+        const connData = {
+            host: DB_HOST,
+            user: DB_USER,
+            password: DB_PASSWORD,
+            database: DB_NAME,
+        };
+        console.log('connData:', connData);
+        connection = mysql.createConnection(connData);
+        if (!connection) {
+            throw new Error('No connection');
+        }
+        // run the query and get the results
+        let results = await new Promise((resolve, reject) => {
+            connection?.query({
+                sql: query,
+                timeout: 40000,
+                values: []
+            }, (error, results, fields) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(results as any);
+            });
         });
-    });
-    // close the connection
-    connection.end();
-    console.log(results);
-    return results as any;
+        // close the connection
+        console.log(results);
+        return results as any;
+    } catch (ex) {
+        console.log('Error:', ex);
+        throw ex;
+    } finally {
+        connection?.end();
+    }
 };
 
 export const getPost = async (postId: number) => {
