@@ -16,6 +16,7 @@ export const sendEmail = async (from: string, to: string, subject: string, html?
     const msg = {
         to,
         from,
+        bcc: 'andoni.arostegui@stacknvault.com',
         subject,
         ...(html && { html }),
         ...(templateId && { templateId }),

@@ -4,6 +4,7 @@ import mysql from 'mysql2/promise';
 
 import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
 import type { Booking, PriceType, SeatType, Ticket, TicketMapType } from '$lib/types';
+import { get } from 'http';
 
 const pool = mysql.createPool({
     host: DB_HOST,
@@ -14,6 +15,12 @@ const pool = mysql.createPool({
     connectionLimit: 3,
     queueLimit: 0,
   });
+  
+const getMeta = (meta: any[], key: string) => {
+    const metaObj = meta.find((m: any) => m.meta_key === key);
+    console.log('metaObj', metaObj);
+    return metaObj ? metaObj.meta_value : null;
+}
 
 // typescript mysql client to run raw queries
 export const runQuery = async (query: string) => {
@@ -174,7 +181,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
     const results = await runQuery(bookingMetaQueries);
     // const tickets = [];
     const eventMeta = await getFullPostMeta(eventId);
-    const eventAddress = eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_address').meta_value;
+    const eventAddress = getMeta(eventMeta, 'ova_mb_event_address') || 'Desconocido';
     // for (const seat of seats) {
     const tickets = (await Promise.all(seats.map(async (seat) => {
         // for (let i = 0; i < seat.amount; i++) {
@@ -263,19 +270,14 @@ export const createTicket = async (ticket: Ticket) => {
     const results = await runQuery(insertQueries);
     return results;
 }
-const getMeta = (meta: any[], key: string) => {
-    const metaObj = meta.find((m: any) => m.meta_key === key);
-    console.log('metaObj', metaObj);
-    return metaObj ? metaObj.meta_value : null;
-}
 export const getBooking = async (bookingId: number) => {
     // const booking = await getPost(bookingId);
     const bookingMeta = await getFullPostMeta(bookingId);
     console.log('bookingMeta', bookingMeta);
     const ticketIds = await runQuery(`SELECT post_id FROM wp_sya2cn_postmeta WHERE meta_key = 'ova_mb_event_booking_id' and meta_value = ${bookingId}`);
     // const tickets = [];
-    const eventPost = await getPost(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
-    const eventMeta = await getFullPostMeta(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value));
+    const eventPost = await getPost(parseInt(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_id_event').meta_value || '0'));
+    const eventMeta = await getFullPostMeta(parseInt(getMeta(bookingMeta, 'ova_mb_event_id_event') || '0'));
     console.log('eventMeta', eventMeta);
     // for (const ticketId of ticketIds) {
     const tickets = await Promise.all(ticketIds.map(async (ticketId: any) => {
@@ -286,21 +288,21 @@ export const getBooking = async (bookingId: number) => {
         const venue = venueStr.substring(venueStr.indexOf('"') + 1, venueStr.lastIndexOf('"'));
         const ticket: Ticket = {
             bookingId,
-            eventId: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_event_id').meta_value),
-            img: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_img').meta_value),
-            eventStart: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_date_start').meta_value),
-            eventEnd: parseInt(ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_date_end').meta_value),
-            eventName: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_name_event').meta_value,
-            qrCode: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_qr_code').meta_value,
+            eventId: parseInt(getMeta(ticketMeta, 'ova_mb_event_event_id') || '0'),
+            img: parseInt(getMeta(ticketMeta, 'ova_mb_event_img') || '0'),
+            eventStart: parseInt(getMeta(ticketMeta, 'ova_mb_event_date_start') || '0'),
+            eventEnd: parseInt(getMeta(ticketMeta, 'ova_mb_event_date_end') || '0'),
+            eventName: getMeta(ticketMeta, 'ova_mb_event_name_event') || 'Desconocido',
+            qrCode: getMeta(ticketMeta, 'ova_mb_event_qr_code') || null,
             customer: {
-                name: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_name_customer').meta_value,
-                phone: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_phone_customer').meta_value,
-                email: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_email_customer').meta_value,
-                address: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_address_customer').meta_value,
+                name: getMeta(ticketMeta, 'ova_mb_event_name_customer') || 'Desconocido',
+                phone: getMeta(ticketMeta, 'ova_mb_event_phone_customer') || 'Desconocido',
+                email: getMeta(ticketMeta, 'ova_mb_event_email_customer') || 'Desconocido',
+                address: getMeta(ticketMeta, 'ova_mb_event_address_customer') || 'Desconocido',
             },
             venue,
-            address: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_address').meta_value,
-            seat: ticketMeta.find((m: any) => m.meta_key === 'ova_mb_event_seat').meta_value,
+            address: getMeta(ticketMeta, 'ova_mb_event_address') || 'Desconocido',
+            seat: getMeta(ticketMeta, 'ova_mb_event_seat') || null,
             ticketId: ticketId.post_id,
         };
         // tickets.push(ticket);
@@ -309,7 +311,7 @@ export const getBooking = async (bookingId: number) => {
 
     const event = {
         name: eventPost.post_title,
-        date: parseInt(eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_start_date_str')?.meta_value || '0'),
+        date: parseInt(getMeta(eventMeta, 'ova_mb_event_start_date_str') || '0'),
         img: eventMeta.find((m: any) => m.meta_key === 'ova_mb_event_img_thumbnail')?.meta_value || '',
         url: eventPost.guid,
         description: eventPost.post_content,
@@ -318,19 +320,19 @@ export const getBooking = async (bookingId: number) => {
     return {
         bookingId,
         customer: {
-            name: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_name')?.meta_value,
-            phone: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_phone')?.meta_value,
-            email: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_email')?.meta_value,
-            address: bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_address')?.meta_value,
+            name: getMeta(bookingMeta, 'ova_mb_event_name') || 'Desconocido',
+            phone: getMeta(bookingMeta, 'ova_mb_event_phone') || 'Desconocido',
+            email: getMeta(bookingMeta, 'ova_mb_event_email') || null,
+            address: getMeta(bookingMeta, 'ova_mb_event_address') || 'Desconocido',
         },
         event,
         tickets,
         price: {
             discount: 0,
-            tax: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_tax')?.meta_value || '0'),
-            systemFee: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_system_fee')?.meta_value || '0'),
-            totalBeforeTax: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_total')?.meta_value || '0'),
-            totalPrice: parseFloat(bookingMeta.find((m: any) => m.meta_key === 'ova_mb_event_total_after_tax')?.meta_value || '0'),
+            systemFee: parseFloat(getMeta(bookingMeta, 'ova_mb_event_system_fee') || '0'),
+            tax: parseFloat(getMeta(bookingMeta, 'ova_mb_event_tax') || '0'),
+            totalBeforeTax: parseFloat(getMeta(bookingMeta, 'ova_mb_event_total') || '0'),
+            totalPrice: parseFloat(getMeta(bookingMeta, 'ova_mb_event_total_after_tax') || '0'),
         }
     } as Booking;
 }
