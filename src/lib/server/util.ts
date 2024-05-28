@@ -1,8 +1,7 @@
 import sgMail, { type MailDataRequired } from "@sendgrid/mail";
-import { BASIC_CREDENTIALS } from '$env/static/private'
+import { BASIC_CREDENTIALS, URLBOX_PUBLISHABLE_KEY } from '$env/static/private'
 import type { AttachmentJSON } from "@sendgrid/helpers/classes/attachment";
 import { SENDGRID_API_KEY } from '$env/static/private'
-import axios from 'axios';
 import { error, type RequestEvent } from "@sveltejs/kit";
 const credentials = JSON.parse(BASIC_CREDENTIALS || '[]');
 
@@ -16,7 +15,7 @@ export const sendEmail = async (from: string, to: string, subject: string, html?
     const msg = {
         to,
         from,
-        bcc: 'andoni.arostegui@stacknvault.com',
+        // bcc: 'andoni.arostegui@stacknvault.com',
         subject,
         ...(html && { html }),
         ...(templateId && { templateId }),
@@ -26,29 +25,9 @@ export const sendEmail = async (from: string, to: string, subject: string, html?
     console.log('msg', msg);
     return await sgMail.send(msg);
 }
-// export const takeScreenshot = async (url: string, fileName: string) => {
-//     var options = {
-//       method: 'POST',
-//       url: 'https://api.apyhub.com/generate/webpage/pdf-file',
-//       params: {output: 'test-sample.pdf', landscape: 'false', margin: '0'},
-//       headers: {
-//         'apy-token': APY_TOKEN || '',
-//         'Content-Type': 'application/json'
-//       },
-//       data: {url: 'https://apyhub.com'}
-//     };
-    
-//     const response = await axios.request(options);
-//     if (response.status !== 200) {
-//         throw new Error('Error taking screenshot');
-//     }
-    
-//     const str = Buffer.from(response.data, 'binary').toString('base64');
 
-//     return str;
-// }
 export const takeScreenshot = async (url: string) => {
-    const screenshotRequestURL = `https://api.urlbox.io/v1/TmDsstCwzocSSbwn/pdf?full_page=false&force=true&url=${encodeURIComponent(url)}`
+    const screenshotRequestURL = `https://api.urlbox.io/v1/${URLBOX_PUBLISHABLE_KEY}/pdf?full_page=false&force=true&url=${encodeURIComponent(url)}`
     console.log('Requesting screenshot', screenshotRequestURL);
     const response = await fetch(screenshotRequestURL)
     if (!response.ok) {

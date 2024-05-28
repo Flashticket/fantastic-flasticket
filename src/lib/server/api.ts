@@ -2,9 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql2/promise';
 
 
-import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME } from '$env/static/private'
+import { DB_HOST, DB_USER, DB_PASSWORD,  DB_NAME, EMAIL_FROM } from '$env/static/private'
 import type { Booking, PriceType, SeatType, Ticket, TicketMapType } from '$lib/types';
-import { get } from 'http';
 
 const pool = mysql.createPool({
     host: DB_HOST,
@@ -120,7 +119,7 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
     const customer = {
         name: 'Taquilla',
         phone: '123',
-        email: email || 'andoni.arostegui@stacknvault.com',
+        email: email || EMAIL_FROM,
         address: 'Internal address',
     };
     const venue = 'Teatro Metropolitano';
@@ -159,25 +158,6 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
         (${bookingId}, 'ova_mb_event_total', '${price.totalBeforeTax}'),
         (${bookingId}, 'ova_mb_event_total_after_tax', '${price.totalPrice}')
         `;
-        
-        
-        // (${bookingId}, 'ova_mb_event_orderid', '16489'),
-        // (${bookingId}, 'ova_mb_event_profit_status', ''),
-        // (${bookingId}, 'ova_mb_event_id_customer', '10'),
-        // (${bookingId}, 'ova_mb_event_tax', '100'),
-        // (${bookingId}, 'ova_mb_event_profit', '2000'),
-        // (${bookingId}, 'ova_mb_event_commission', '110'),
-        // (${bookingId}, 'ova_mb_event_total_after_tax', '2210'),
-        // (${bookingId}, 'ova_mb_event_total', '2110'),
-        // (${bookingId}, 'ova_mb_event_address', '23423'),
-        // (${bookingId}, 'ova_mb_event_email', 'martinuribe73@gmail.com'),
-        // (${bookingId}, 'ova_mb_event_phone', '5574783438'),
-        // (${bookingId}, 'ova_mb_event_last_name', 's'),
-        // (${bookingId}, 'ova_mb_event_first_name', 'Andoni'),
-        // (${bookingId}, 'ova_mb_event_name', 'Andoni s'),
-        // (${bookingId}, 'ova_mb_event_date_cal_tmp', '1717027200'),
-        // (${bookingId}, 'ova_mb_event_date_cal', '30 mayo, 2024'),
-        // (${bookingId}, 'ova_mb_event_id_cal', '1708643128')
     const results = await runQuery(bookingMetaQueries);
     // const tickets = [];
     const eventMeta = await getFullPostMeta(eventId);
@@ -221,14 +201,6 @@ export const bookSeats = async (eventId: number, idCal: string, seats: SeatType[
 
     const ticketIdsStr = tickets.map((r: Ticket, index) => `i: ${index};i:${r.ticketId}`).join(';');
     const ticketListQuery = `INSERT INTO wp_sya2cn_postmeta (post_id, meta_key, meta_value) VALUES(${bookingId}, 'ova_mb_event_record_ticket_ids', 'a:${tickets.length}:{${ticketIdsStr};}')`;
-    // a:7:{
-    // i:0;a:3:{s:2:"id";s:22:"ROSA-SECC-GEN-IZQ-ASTO";s:5:"price";d:100;s:3:"qty";s:1:"2";}
-    // i:1;a:3:{s:2:"id";s:23:"VERDE-SECC-GEN-DER-ASTO";s:5:"price";d:100;s:3:"qty";s:1:"3";}
-    // i:2;a:3:{s:2:"id";s:23:"CAFE-SECC-GEN-CENT-ASTO";s:5:"price";d:200;s:3:"qty";s:1:"5";}
-    // i:3;a:2:{s:2:"id";s:30:"PLATINUM_ROJO-SECC-B2-ASTO-Z39";s:5:"price";d:1000;}
-    // i:4;a:2:{s:2:"id";s:31:"PLATINUM_ROJO-SECC-B2-ASTO-AA39";s:5:"price";d:1000;}
-    // i:5;a:2:{s:2:"id";s:25:"VIP_AZUL-SECC-A2-ASTO-N36";s:5:"price";d:100;}
-    // i:6;a:2:{s:2:"id";s:25:"VIP_AZUL-SECC-A2-ASTO-M35";s:5:"price";d:100;}}
     const cart = `a:${seats.length}:{${seats.map((s, i) => `i:${i};a:${s.type === 'area' ? 3 : 2}:{s:2:"id";s:${s.seat.length}:"${s.seat}";s:5:"price";d:${s.price};${s.type === 'area' ? `s:3:"qty";s:${`${s.amount}`.length}:"${s.amount}";` : ''}}`).join('')}}`;
     const promises = [
         runQuery(ticketListQuery),

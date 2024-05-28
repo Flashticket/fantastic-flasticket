@@ -1,9 +1,5 @@
-import { getBooking } from "$lib/server/api";
-import { corsHeaders, sendEmail, takeScreenshot } from "$lib/server/util";
+import { corsHeaders } from "$lib/server/util";
 import type { RequestEvent } from "@sveltejs/kit"
-import { SENDGRID_TEMPLATE_ID, EMAIL_FROM } from '$env/static/private';
-import { generatePass } from "$lib/server/passkit";
-import moment from "moment";
 export const OPTIONS = async (request) => {
     return new Response(null, {
         headers: corsHeaders,

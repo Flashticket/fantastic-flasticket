@@ -37,19 +37,9 @@ You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
-# Notes:
-el_sendmail_by_booking_id is responsible for email sending
-see what el_sendmail_each_customer does...
-
-
-Seems like this drives the hook to send email:
-add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
-
-# Hologram in the ticket:
-x: 2650 --> 8.65cm
-y: 125 --> 1.14cm
-
-780x460
-
-4287pix/14cm
-1530pix 5cm
+# Third party dependencies
+- Vercel
+- Wordpress
+- Sendgrid
+- Apple PassKit
+- Urlbox

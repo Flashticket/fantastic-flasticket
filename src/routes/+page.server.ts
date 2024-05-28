@@ -1,6 +1,5 @@
 import { authenticate } from '$lib/server/util.js';
 import type { SeatType, TicketMapType } from '$lib/types.js';
-import { error } from '@sveltejs/kit';
 import * as cheerio from 'cheerio';
 
 export const load = async (request) => {    

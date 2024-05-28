@@ -70,7 +70,7 @@ export const POST = async ({ request, params, url }: { request: RequestEvent, pa
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
     }
-    await sendEmail(`Flash Ticket <${EMAIL_FROM}>`, 'andoni.arostegui@stacknvault.com', 'Error sending tickets', `Error sending tickets for booking ${id}.<br/>. ${JSON.stringify(errors, null, 2)}`);
+    // await sendEmail(`Flash Ticket <${EMAIL_FROM}>`, 'andoni.arostegui@stacknvault.com', 'Error sending tickets', `Error sending tickets for booking ${id}.<br/>. ${JSON.stringify(errors, null, 2)}`);
     return new Response(JSON.stringify({ errors }), {
         headers: {
             'content-type': 'application/json',
