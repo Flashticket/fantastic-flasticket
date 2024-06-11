@@ -51,14 +51,14 @@ You can preview the production build with `npm run preview`.
 * Configure de .env file properly on vercel
 * Deploy the app into vercel
 * When there is a new event defined, all the relevant files on static/events/<event id> need to be set up:
-./passkit/icon@2x.jpeg
-./passkit/background.png
-./passkit/logo.png
-./passkit/pass.json
-./passkit/logo@2x.png
-./passkit/thumbnail@2x.jpeg
-./passkit/icon.jpeg
-./passkit/background@2x.png
-./passkit/thumbnail.jpeg
-./eTickets/background.jpg
-./printableTickets/logo.jpg
+** ./passkit/icon@2x.jpeg
+** ./passkit/background.png
+** ./passkit/logo.png
+** ./passkit/pass.json
+** ./passkit/logo@2x.png
+** ./passkit/thumbnail@2x.jpeg
+** ./passkit/icon.jpeg
+** ./passkit/background@2x.png
+** ./passkit/thumbnail.jpeg
+** ./eTickets/background.jpg
+** ./printableTickets/logo.jpg
