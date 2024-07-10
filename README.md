@@ -42,7 +42,7 @@ You can preview the production build with `npm run preview`.
 - Vercel
 - Wordpress
 - Sendgrid
-- Apple PassKit
+- Apple PassKit (look into https://developer.apple.com/documentation/walletpasses/building_a_pass for instructions)
 - Urlbox
 
 # Operations for deployment
